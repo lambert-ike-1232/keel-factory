@@ -1,0 +1,48 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/harness/hooks/block-no-verify.js",
+            "statusMessage": "Checking for git hook bypass"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/harness/hooks/config-protection.js",
+            "statusMessage": "Checking for protected config edit"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /ABSOLUTE/PATH/TO/harness/hooks/data-boundary-guard.py",
+            "statusMessage": "Checking data boundary"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/harness/hooks/cost-tracker.js",
+            "statusMessage": "Recording cost"
+          }
+        ]
+      }
+    ]
+  }
+}
