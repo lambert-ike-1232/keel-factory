@@ -299,3 +299,56 @@ The checker itself is held to Rule 6b already: its self-test
 (`../skills/crew/scripts/test_check_lanes.py`) includes a round trip through a real git
 diff, and on 2026-10-14 each of five deliberately broken copies of the checker failed
 it. What remains unproven is the discipline in use, not the instrument.
+
+### Field record
+
+**Run 1 — 2026-10-18, KEEL v1.1 built on KEEL.** Two shared-mode write lanes (`evals/`,
+and `keel/framework/CAPABILITIES.md`) beside a lead who kept writing; plan, lanes and
+landing log in the master's `.scratch/task_board/crew-plan-evals-capabilities.md`.
+
+- **Worked:** both back-briefs caught a false premise before any edit, so neither lane
+  had to be evicted. The evals worker found that the eval tool grants only read-only
+  tools without `--allow-tools`, and that KEEL's own production-question list left out
+  observability and data retention. The CAPABILITIES worker found that the probe log sat
+  in a folder linked kits leave out, and that several rows the lead had called Evidence
+  rested only on documents. The fence passed on every landing, and it was itself shown
+  failing first: a stray path and a cross-lane path were each reported.
+- **Gap 1 — shared mode with a writing lead.** The working-tree diff mixes the lead's
+  edits with the workers', so `--lane` cannot attribute them. Declaring the lead's own
+  write set as a lane made the whole-tree fence meaningful; attributing a change inside the
+  lead's lane still rested on the lead knowing what it had edited. Until the checker can
+  compare against a snapshot taken at dispatch, a lead in shared mode declares its own
+  lane.
+- **Gap 2 — agreement under checkpoint mode.** Step 4 of the skill says not to dispatch
+  before the manager agrees. Under checkpoint mode the manager had already approved the
+  plan's BRIEF and CONTRACT and said to use agents freely. That was recorded as the
+  agreement, in the plan, with the manager's words. Step 4 now needs a line for that case.
+- **Not observed:** none of the four failures above. This run does not promote CREW; it
+  is the first data point.
+
+**Run 2 — 2026-10-18, fixing PROVE pass 1's findings on KEEL v1.1.** Nine write lanes in
+two phases plus a lead lane, all shared mode (the work was uncommitted, so a worktree
+would not have held it), dispatched as workflow agents; plan, lanes and landing log in
+the master's `.scratch/task_board/crew-plan-prove-fixes.md`.
+
+- **Gap 1 closed in practice.** The lead fingerprinted the tree before each phase (a
+  SHA-256 per file over `git ls-files -co --exclude-standard`) and fed the changed paths
+  since that snapshot to `check_lanes.py --changed -`. That attributes every change to a
+  lane even with nothing committed and a lead who keeps writing, provided the lead writes
+  nothing outside its own lane while a phase runs. The checker still takes the snapshot
+  from outside; building it in remains open.
+- **Back-briefs without a continuable worker.** A workflow agent cannot be resumed, so each
+  lane ran twice: a read-only back-brief whose planned files a script checked against the
+  write set, then a fresh build agent handed the reviewed plan and the lead's answers as a
+  file. All nine back-briefs raised a premise worth acting on before any edit (among them:
+  the mutation runner never ran the unbroken suite, so a red baseline would have counted
+  every mutant as caught; a test pinned one document block to a script, which forced a
+  write-set move).
+- **Write sets per phase.** A file can need different owners in different phases. The lead
+  swapped the lane table between phases and re-ran the plan check each time; one lane
+  table per run keeps "one writer per file" checkable.
+- **Workers report paths their own way.** One worker returned absolute paths, and the lead's
+  quick membership check flagged them as outside the lane. The snapshot fence, not a
+  worker's list, decided.
+- **Not observed:** no lane was evicted; both phases' fences and gates passed first time.
+  Two runs are still not the bar in §12 for promotion.

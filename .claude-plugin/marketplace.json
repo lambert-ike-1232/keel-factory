@@ -1,0 +1,12 @@
+{
+  "name": "keel-factory",
+  "description": "The KEEL FACTORY master folder, offered as one plugin. Install it for pinned, versioned updates; for a live link to the master, use harness/install_plugin.py instead.",
+  "owner": { "name": "Lambert Ike" },
+  "plugins": [
+    {
+      "name": "keel",
+      "source": "./",
+      "description": "HELM routing, the five KEEL phases, independent PROVE review, the task board, and the data-boundary guard."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "keel",
+  "version": "1.1.0",
+  "description": "KEEL FACTORY: an engineering method for AI coding agents. HELM routes every session; five phases take an idea or a codebase to production grade; an independent PROVE review decides what is done; a data-boundary guard arms only in projects where KEEL is switched on.",
+  "author": {
+    "name": "Lambert Ike"
+  },
+  "keywords": [
+    "engineering",
+    "method",
+    "review",
+    "task-board",
+    "guard"
+  ],
+  "skills": [
+    "./keel/skills/",
+    "./keel/capabilities/",
+    "./keel/skills-board/claude/commit",
+    "./keel/skills-board/claude/focused-implementation",
+    "./keel/skills-board/claude/handoff",
+    "./keel/skills-board/claude/orchestrate-implementation",
+    "./keel/skills-board/claude/post-creation-audit",
+    "./keel/skills-board/claude/resume-handoff",
+    "./keel/skills-board/claude/spike",
+    "./keel/skills-board/claude/task-board-init",
+    "./keel/skills-board/claude/task-board-triage",
+    "./keel/skills-board/claude/task-interview",
+    "./keel/skills-board/claude/to-follow-on",
+    "./keel/skills-board/claude/to-task"
+  ],
+  "hooks": "./harness/plugin-hooks.json"
+}

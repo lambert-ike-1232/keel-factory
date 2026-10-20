@@ -126,3 +126,29 @@ This stays a draft, not a rule, until one of these is true:
 Until then: treat §2 as usable — it is built from confirmed gaps in a real source plus
 KEEL's own already-adopted independence and traceability principles, not from guesswork —
 and treat §3 as an idea worth trying once, not a mechanism to depend on.
+
+---
+
+## 6. What each harness really offers for an unattended run
+
+The seven fields in §2 are KEEL's; the mechanisms that carry them out belong to the
+harness. This is what exists, as of 2026-10-18, so a loop is never designed around a
+mechanism that isn't there ([CAPABILITIES.md](CAPABILITIES.md), the grounding rule).
+Labels as everywhere: **Evidence** was run on this machine (Claude Code 2.1.170, Codex
+0.138), as a probe recorded in [HARNESS-PROBES.md](HARNESS-PROBES.md) or a flag seen in
+the tool's `--help`. **Inferred** is from the vendor's docs or extracted system prompts,
+cited row by row in the harness tables of [CAPABILITIES.md](CAPABILITIES.md).
+
+| Field | Claude Code | Codex |
+|---|---|---|
+| Run without a person | `claude -p "…"` (Evidence). AskUserQuestion is offered there but fails, and the agent falls back to a numbered text round (Evidence, L3, L4). No plan approval there (Inferred, docs) | `codex exec "…"` (Evidence, `codex exec --help`). Approvals are never asked in exec (Inferred, docs) |
+| Cost ceiling | `--max-budget-usd` (Evidence: flag present). A client-side estimate that "can pass the cap" (Inferred, docs), so keep a margin. `--max-turns` (Inferred) | Goals carry a `token_budget` (Inferred, prompts). No dollar cap found |
+| Permissions | `--permission-mode`, `--allowedTools`, `--disallowedTools` (Evidence: flags present) | `--sandbox read-only\|workspace-write\|danger-full-access` (Evidence) |
+| Independent done-checker | A separate `claude -p` run, or the plugin's `keel:prove-*` agents; a Stop hook can refuse to let a turn end (Inferred, docs; capped at 8 consecutive refusals) | A separate `codex exec` run; `spawn_agent` without forked history (Inferred) |
+| Recurring trigger | In a live session, `/loop`; CronCreate jobs live only in that session and expire after 7 days (Inferred, prompts). Durable schedules need cloud routines or desktop scheduled tasks | Desktop automations (heartbeat, cron) (Inferred, prompts) |
+| Escalation with nobody present | File a board task with `gate: owner`; nothing in the harness asks for you | Same; a goal marks itself blocked after three turns on the same blocker (Inferred, prompts) |
+
+On a subscription plan, a headless Claude Code run with no `ANTHROPIC_API_KEY` set draws
+on the plan rather than on API billing (checked 2026-10-18 that the key was unset; the
+billing itself is Inferred). Check this before any unattended run: a key in the
+environment turns the same loop into a metered bill.

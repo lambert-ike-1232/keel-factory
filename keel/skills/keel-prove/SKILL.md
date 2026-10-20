@@ -1,6 +1,6 @@
 ---
 name: keel-prove
-description: The KEEL PROVE phase - a three-axis review (Standards, Spec, Gate) in parallel sub-agents, the acceptance gate actually run, the traceability matrix promoted on evidence, cost measured, and an honest status report. Use when finishing a feature or project, before committing, or when asked whether something is done.
+description: Prove a claim of done. Arms the checks, runs fresh-context reviewers (standards, spec, and gate above SPRINT), promotes the traceability matrix on evidence, measures cost and writes an honest status report. Use before calling a feature or project done, or when asked whether it is.
 ---
 
 # KEEL — Prove
@@ -8,7 +8,29 @@ description: The KEEL PROVE phase - a three-axis review (Standards, Spec, Gate) 
 Turn a claim of "done" into a fact, or find out it is not one.
 
 Run this in a **fresh context**. An agent that just wrote code is the worst possible
-reviewer of it.
+reviewer of it. If you are that agent, you still run this skill: you orchestrate, and the
+reviewer agents in step 3 do the reviewing. At SPRINT, spawn two of them (Standards and
+Spec); you may run the gate's commands yourself, because an exit code does not depend on
+who runs it, and the report says the gate was run by the builder. Above SPRINT, spawn all
+three. The review is always by agents.
+
+In a copied skill (this file sits under a project's `.claude/skills/` or
+`.agents/skills/`, not under `keel/`), read every `../` path under `keel-factory/keel/`,
+and root files such as `CLAUDE.md` under `keel-factory/`, even when the project has a
+file of that name.
+
+## First, is KEEL switched on here?
+
+If KEEL is not switched on here (no `.keel/` or `keel-factory/` by HELM's rule), or a
+`.keel/` holds no `keel.json`, run HELM's switch-on first (`../helm/SKILL.md`, its
+"First — is KEEL switched on here" section), then come back.
+
+In operator mode (`.keel/keel.json` says operator; or no role is recorded, as with a
+linked or copied `keel-factory/`, and by HELM's rule the project carries its own
+instructions that are not KEEL's; or the session note, the user or your brief says so; or
+switch-on just decided it), `../../../OPERATOR.md` governs: every record this skill would
+keep under `docs/` or on the task board goes in `<ops>`, KEEL's notes folder defined
+there, never in the package's own tree.
 
 ## 0. Arm the gate before you trust it
 
@@ -33,14 +55,21 @@ cannot produce evidence and its rows stay `PARTIAL` — say which command would 
 ## 1. Pin the fixed point
 
 Whatever the user names — a commit, branch, tag, or merge-base. If they name nothing,
-ask. Confirm it resolves and the diff is non-empty **before** spawning anything:
+propose one (the commit the work started from, from `docs/STATE.md` or `git log`) and
+say which. Confirm it resolves and the diff is non-empty **before** spawning anything:
 
 ```
-git diff <fixed-point>...HEAD
+git diff <fixed-point>...HEAD          # committed work
 git log <fixed-point>..HEAD --oneline
+git diff <fixed-point>                 # uncommitted work: the working tree
+git ls-files --others --exclude-standard
 ```
 
-A bad ref should fail here, not inside three parallel sub-agents.
+KEEL does not commit without the user's word, so the work under review is often
+uncommitted: then the review covers the working tree against the fixed point, plus the
+untracked files. Tell each reviewer which of the two it is reviewing.
+
+A bad ref should fail here, not inside the parallel sub-agents.
 
 ## 2. Find the sources
 
@@ -49,33 +78,32 @@ A bad ref should fail here, not inside three parallel sub-agents.
   `CONTEXT.md` for vocabulary.
 - **Gate:** `docs/ACCEPTANCE.md` and `docs/TRACEABILITY.md`.
 
-## 3. Spawn three sub-agents in parallel
+## 3. Spawn the reviewers in parallel
 
-They must not share context. Each reports under 400 words.
+Three of them, or two at SPRINT (Standards and Spec, with the gate's commands run by you).
+They must not share context with each other or with whoever wrote the code. Each reports
+under 400 words. Their instructions live in one place each, the agent files at the kit
+root (`../../../agents/`):
 
-**Standards.** *"Report, per file or hunk: (a) every place the diff violates a
-documented standard, citing the file and the rule; (b) any code smell from this
-baseline, naming it and quoting the hunk. A documented repo standard always overrides
-the baseline. Distinguish hard violations from judgement calls; baseline smells are
-always judgement calls. Skip anything tooling already enforces."*
+| Reviewer | File | In Claude Code (KEEL plugin) |
+| --- | --- | --- |
+| **Standards** — documented standards and a code-smell baseline | `../../../agents/prove-standards.md` | subagent type `keel:prove-standards` |
+| **Spec** — missing, wrong and unrequested behavior against the contract | `../../../agents/prove-spec.md` | `keel:prove-spec` |
+| **Gate** — every Required Check run, scope reported, traceability rows checked | `../../../agents/prove-gate.md` | `keel:prove-gate` |
 
-Paste this baseline in full — the sub-agent has no other access to it:
-Mysterious Name · Duplicated Code · Feature Envy · Data Clumps · Primitive Obsession ·
-Repeated Switches · Shotgun Surgery · Divergent Change · Speculative Generality ·
-Message Chains · Middle Man · Refused Bequest.
+Hand each one the fixed point from step 1 and the paths from step 2; in operator mode,
+each fresh-context run is also told the mode and `<ops>` in its brief. Nothing else: the
+less of this session it sees, the more independent it is.
 
-**Spec.** *"Report: (a) requirements the contract asked for that are missing or
-partial; (b) behaviour in the diff nobody asked for (scope creep); (c) requirements
-that look implemented but where the implementation looks wrong. Quote the contract line
-for each finding."*
-
-**Gate.** *"For every Required Check in `docs/ACCEPTANCE.md`: run the command and
-report the exit code, the output, and **the scope it reports** (files scanned, cases run,
-assertions made). Do not reason about whether it would pass. A check whose command does
-not exist is a CRITICAL finding, not an UNKNOWN. A check that exits 0 having examined
-nothing is also a CRITICAL finding — flag any check that cannot state its scope. Then, for
-every row in `docs/TRACEABILITY.md`, report whether its bound check exists, is armed, and
-passes."*
+- **Claude Code with the plugin:** spawn the subagent types in one message, so they run
+  at once.
+- **Any other harness, or a linked kit:** spawn one fresh-context sub-agent per reviewer
+  and give each the body of its file, after the frontmatter, as its instructions. In
+  Codex, use `spawn_agent` without forking this conversation's history; the user asking
+  for `keel-prove` is the explicit request Codex needs before it spawns agents.
+- **No sub-agents at all:** say so, and run the reviews one after another in a fresh
+  session, starting each from its file. Same-context review is not independent, and the
+  status report says which way it was done.
 
 ## 4. Aggregate
 
@@ -113,7 +141,9 @@ itself against a named failing check.
 
 ## 7. The honest status report
 
-Three categories, never blurred:
+Say first how the review was done: by which reviewer agents, in fresh contexts, or, if
+none could be spawned, that it was not independent. At SPRINT, also say that the gate was
+run by the builder. Then three categories, never blurred:
 
 - **Implemented and verified** — the code exists and *this named command* proves it
 - **Implemented, unverified** — the code exists, nothing tests it

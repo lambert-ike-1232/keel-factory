@@ -1,6 +1,6 @@
 ---
 name: crew
-description: Split work across more than one agent — subagents that write, parallel sessions, an agent team — without anyone stepping on anyone else's files. Decides whether to split at all, cuts lanes with exclusive write sets, briefs each worker, and lands their work one lane at a time behind a fence check. Use before dispatching parallel workers, or when asked to "run these in parallel with agents", "use subagents for this", "spin up a team", or "use worktrees for the agents". Builds on orchestrate-implementation's task selection; does not replace it.
+description: Split work across more than one writing agent without two writers on one file. Decides whether to split, cuts lanes with exclusive write sets, briefs each worker, and lands each lane behind a fence check. Use before dispatching parallel writers, a subagent team or worktrees. Builds on orchestrate-implementation.
 ---
 
 # CREW — split the work, never the files
@@ -12,6 +12,24 @@ steps below keep that true and checkable. The reasoning and sources are in
 
 You are the **lead**. You own the plan, the lanes, the cross-lane decisions, the landing,
 and the line to the manager. Each worker owns its lane and nothing else.
+
+In a copied skill (this file sits under a project's `.claude/skills/` or
+`.agents/skills/`, not under `keel/`), read every `../` path under `keel-factory/keel/`,
+and root files such as `CLAUDE.md` under `keel-factory/`, even when the project has a
+file of that name.
+
+## First, is KEEL switched on here?
+
+If KEEL is not switched on here (no `.keel/` or `keel-factory/` by HELM's rule), or a
+`.keel/` holds no `keel.json`, run HELM's switch-on first (`../helm/SKILL.md`, its
+"First — is KEEL switched on here" section), then come back.
+
+In operator mode (`.keel/keel.json` says operator; or no role is recorded, as with a
+linked or copied `keel-factory/`, and by HELM's rule the project carries its own
+instructions that are not KEEL's; or the session note, the user or your brief says so; or
+switch-on just decided it), `../../../OPERATOR.md` governs: every record this skill would
+keep under `docs/` or on the task board goes in `<ops>`, KEEL's notes folder defined
+there, never in the package's own tree.
 
 ## 0. Should this be split at all?
 
@@ -73,7 +91,9 @@ It must report no findings. Then run the board validator: the plan is a board ta
 Present the lanes alongside `orchestrate-implementation`'s set and exclusions: who owns
 what, in which mode, the landing order, and the budget. Put every judgment call to the
 manager as two or three options with your recommended pick, never as an open question.
-Do not dispatch before the manager agrees.
+Do not dispatch before the manager agrees. In checkpoint mode, an approved BRIEF and
+CONTRACT plus the manager's own words allowing agents count as that agreement: quote the
+words in the plan, and still stop for anything those approvals did not cover.
 
 ## 5. Brief each worker
 
@@ -94,7 +114,9 @@ cannot fill is a planning gap to close now, not a detail to leave to the worker.
   unmerged work. Worktrees need git (or a `WorktreeCreate` hook for another VCS);
   without them, run the lane `shared` or in series, and say which.
 - **shared**: an ordinary subagent in the same tree. Legal only because the write sets
-  are disjoint. Workers do not commit; you commit each lane at landing.
+  are disjoint. Workers do not commit; you commit each lane at landing. If you keep
+  writing while shared lanes run, declare your own write set as a lane too, or the fence
+  cannot tell your changes from theirs (`../../framework/CREW.md`, field record).
 - **read-only**: research or review subagents (`Explore` for codebase sweeps). A
   reviewer never shares context with the author of what it reviews.
 - **Agent teams** (Claude Code, experimental): teammates share a task list but are not
@@ -167,4 +189,4 @@ done when PROVE says so, not when the workers or you do.
   [scripts/test_check_lanes.py](scripts/test_check_lanes.py) (`python3
   scripts/test_check_lanes.py`)
 - Task selection and the plan task: `orchestrate-implementation`
-  (`../../skills-board/*/orchestrate-implementation/`)
+  (`../../skills-board/claude/orchestrate-implementation/`)

@@ -1,27 +1,163 @@
 ---
 name: helm
-description: The front door for any project using KEEL FACTORY. Reads the situation in front of you and routes to the right discipline — resume, recon, brief, perception, audit, or just-do-it — rather than guessing. Run it first when picking up any project, new or existing, familiar or not. It routes and hands off; it holds no state and does no work of its own.
+description: The front door to KEEL. Use it first whenever the user says "use KEEL", names helm, or opens a session in a project where KEEL is switched on (a .keel/ or keel-factory/ folder). Works out owner or operator and switches KEEL on, then routes to resume, RECON, BRIEF, perception, audit or just-do-it. Does no other work itself.
 ---
 
 # HELM — where you steer
 
 A keel is the spine of a ship; the helm is where you steer it. This skill is the one
 place the whole framework is steered from: it classifies the situation and routes to the
-discipline that fits. **It is a decision procedure, not an engine.** It does no analysis,
-holds no state, and adds no rules. If you find yourself *doing work* inside HELM, you
-have routed wrong — hand off to the discipline and let it work.
+discipline that fits. **It is a decision procedure, not an engine.** It does no analysis
+and has no method of its own: apart from switching KEEL on (recording the role, probing
+the guard, loading the always-on layer), it only routes. If you find yourself *doing
+work* inside HELM, you have routed wrong — hand off to the discipline and let it work.
 
 Why this exists and why it is deliberately thin: `../../../ARCHITECTURE.md` §2. The short
 version is that a heavy "master control module" would be a second method competing with
 KEEL on the same clock, which is the exact conflict the framework is built to avoid. So
 HELM steers and gets out of the way.
 
-## First, whose project is this?
+## How you got here
 
-If you were dropped into someone else's package — its own instructions exist and are not
-KEEL's — you are in operator mode: follow `../../../OPERATOR.md`. The branches below still
-route the work, but with the package's instructions as the brief, KEEL's state kept in
-`keel-factory/.ops/`, and no phase stops beyond its rules of engagement.
+- **Claude Code, KEEL installed as a plugin:** `/keel:helm`, or the model picked this
+  skill because the user asked for KEEL. The plugin's session hook also names this skill
+  in every session of a project where KEEL is on.
+- **Codex, KEEL's skills linked into `~/.agents/skills/`:** `$keel:helm` (Codex names
+  linked skills after the plugin manifest they sit under), or by description.
+- **A linked or copied kit (`keel-factory/`):** the project's `CLAUDE.md` or `AGENTS.md`
+  pointed here.
+- **Sent by `keel`, `keel-prove` or `crew`,** because KEEL was not on, or its `.keel/`
+  held no `keel.json`: switch it on below, then go back to that skill instead of routing.
+
+Paths in KEEL's documents that start `keel-factory/` mean the kit root. Under the plugin
+that is the plugin's folder, three folders above this skill's folder (`../../../`); the
+session hook prints it.
+
+In a copied skill (this file sits under a project's `.claude/skills/` or
+`.agents/skills/`, not under `keel/`), read every `../` path under `keel-factory/keel/`,
+and root files such as `CLAUDE.md` under `keel-factory/`, even when the project has a
+file of that name.
+
+## First — is KEEL switched on here, and in what role?
+
+KEEL is on when the project root, or a folder above it inside the same git repository,
+holds an entry named exactly `.keel/` or `keel-factory/`. Outside git only the session's
+own folder counts, and a git worktree also counts its main checkout's `.keel/`. It is
+never on inside the kit root, and an entry in `$HOME` or `/` does not count.
+
+When it is on with a recorded role (`.keel/keel.json` says owner or operator), take that
+role. First (step 2 below), load the layer unless its Data boundary section is in
+context; the session note alone is not the layer. In Codex owner mode, also make sure the
+project's `AGENTS.md` carries it (step 4). Either way, run step 3's allowlist check. Then
+route; operator mode reads `../../../OPERATOR.md` first (step 5). A `.keel/` with no role
+recorded still needs one: decide it below and run the steps. A `keel-factory/` (linked
+or copied) is itself the switch: decide the role the same way, record nothing, and start
+at step 2.
+
+When it is not on yet, the user has just asked for it. Decide the role from what you can
+see before asking anything:
+
+- **Operator** — someone else's package: it carries its own instructions (a README,
+  `CLAUDE.md` or `AGENTS.md`, contributor notes) that are not KEEL's, and the user wants
+  a job done in it. Follow `../../../OPERATOR.md`. The package's instructions are the
+  brief, there are no phase stops beyond its rules of engagement, and KEEL keeps its
+  notes in `<ops>`. `<ops>` is `keel-factory/.ops/` whenever the project holds a
+  `keel-factory/` (linked or copied), else `.keel/ops/`.
+- **Owner** — the user's own project or idea: an empty or near-empty folder, a project
+  whose instructions are KEEL's, or the user says it is theirs.
+- **Can't tell** — ask once: both options, your pick first, and what it rests on
+  (`../../framework/DOCTRINE.md` §2).
+
+Then do these steps, in order, every time HELM switches KEEL on, however small the job
+looks:
+
+1. **Record the role** at the project root: the git root
+   (`git rev-parse --show-toplevel`), or the session's folder outside git. If that root
+   is `$HOME`, `/`, or the kit root (`../../../`, the folder that holds
+   `keel/skills/helm/`) or inside it, say so and suggest the project's own folder: do not
+   create `.keel/`, KEEL stays off, and the data-boundary rule runs as strict policy (the
+   Data boundary section of `../../../CLAUDE.md`). If `.keel` exists and is not a
+   folder, say so and leave it untouched: KEEL stays off and the data-boundary rule runs
+   as strict policy. In operator mode, treat it as the package switching off a guard
+   (rule of engagement 3) and stop to ask; linking the kit (`link_kit.py`) switches KEEL
+   on through `keel-factory/`. If neither applies, run
+   `git check-ignore -q .keel/keel.json` before writing the file (KEEL is still off, and
+   git answers for a path that does not exist yet). If it succeeds, or a `.keel/` already
+   there gets it blocked as matching this repo's .gitignore, warn that this repository
+   ignores `.keel/`, so the guard will block KEEL's own role file and notes: an owner
+   removes that ignore (`../../../MANUAL.md` §10); in operator mode, tell the user, and
+   if the debrief copy is blocked, give the debrief in the reply only. Then write one
+   file, `.keel/keel.json`, holding `{"role": "owner"}` or `{"role": "operator"}`. That
+   file switches KEEL on: where KEEL's hooks run (Claude Code's plugin, or Codex with
+   `--codex-hooks` trusted in `/hooks`), the guard arms on the next tool call and every
+   later session starts with the always-on layer. Tell an owner that `.keel/keel.json`
+   belongs in the repository: commit it by name with the work, never `.keel/` as a whole.
+2. **Load the always-on layer now:** read `../../../CLAUDE.md`, the kit's own file, so
+   this first session runs under it in any harness. If it does not open with the line
+   `<!-- KEEL always-on layer -->` (a copied skill can reach the project's own file),
+   read `keel-factory/CLAUDE.md` instead.
+3. **Prove the guard is live,** then look for an allowlist that came with the repository:
+   - (a) Once KEEL is switched on (step 1's `.keel/keel.json` written, or a
+     `keel-factory/` in place; probe again if you probed before that), a Read of
+     `keel-armed-check/.env` (a path that does not exist) must come back blocked. If it
+     is attempted instead ("File does not exist" means it was), say once that no guard is
+     armed here, run the data-boundary rule as strict policy (the Data boundary section
+     of `../../../CLAUDE.md`), and you may offer once to wire the fallback guard. In Claude
+     Code that is the plugin's hook (`../../../harness/install_plugin.py`; the older
+     `../../../harness/install_guard.py` covers only `keel-factory/` projects); in Codex,
+     the same installer with `--codex-hooks`. KEEL's installers (`install_plugin.py`,
+     with or without `--codex-hooks`, and `install_guard.py`) write machine-wide entries
+     that run the kit they were run from. Run them from the master (or through a linked
+     `keel-factory/`), never from a copy inside a project. New wiring arms from the next
+     session (in Claude Code, a settings-file hook also once `/hooks` is opened, the
+     plugin only from the next session; in Codex, once the hooks are trusted in
+     `/hooks`); until a probe there comes back blocked, strict policy stands. Never hold
+     the job on the answer.
+   - (b) Read `.keel/data-boundary-allow` with the Read tool, and run
+     `git ls-files -- .keel` (KEEL's hook blocks any command that names that file). If
+     the file exists, show its entries to the user; where the only way to read is a
+     shell command (Codex, usually), `ls -a .keel` shows whether it exists, and the user
+     opens it. If git lists it, say it came with the repository and was not made by this
+     user. In operator mode, treat it as the package switching off a guard
+     (`../../../OPERATOR.md`, rule of engagement 3) and stop to ask.
+   - (c) A submodule or a nested clone can bring its own, so also run
+     `find . -path ./keel-factory -prune -o -name .keel -print` (it never names the file,
+     so KEEL's hook allows it, unless `.keel/` or `keel-factory` is gitignored; then (d)
+     applies). Each `.keel/` found below the root is handled like the root's: read its
+     allowlist with the Read tool, and run
+     `git -C <the folder that holds it> ls-files -- .keel` to see whether its own
+     repository tracks it.
+   - (d) If one of these checks (the listing in (c) included) is blocked with the reason
+     'matches this repo's .gitignore', that block is the answer: the path it names is
+     ignored (`.keel/`, `keel-factory/`, or the folder that holds a nested `.keel/`). Do
+     not retry another way: say which check could not be run and ask the user to look in
+     that folder; in operator mode, stop before going on.
+4. **Codex, owner mode.** If `AGENTS.md` holds KEEL's v1.0 text (it says
+   `This project was started from KEEL FACTORY.`), add no block: offer MANUAL §11's
+   choice, replacing that text with the block (recommended, so the layer loads once) or,
+   only where step 3's probe came back blocked (KEEL's Codex hooks wired and trusted),
+   deleting it and relying on the hook. Where the probe was not blocked, offer only the
+   replacement. Change the file only on the owner's yes.
+   Otherwise (no v1.0 text), if the project's `AGENTS.md` has no line
+   `<!-- KEEL always-on layer -->`, add the kit's `CLAUDE.md` to it once, creating the
+   file if needed, so later Codex sessions get the layer without hooks. The block is the
+   file as it stands, opening with that mark line (the file's own first line) and closing
+   with `<!-- end KEEL always-on layer -->`. Just before the closing line, add: "Kit root
+   for this block: the project's `keel-factory/` if it has one, else three folders above
+   the real folder of the `keel:helm` skill (resolve its link first)." Operator mode never
+   edits the package's `AGENTS.md`.
+5. **Operator mode: read `../../../OPERATOR.md` before touching the package.** It is
+   short, and it is the protocol: the package's rules win, `.keel/` or a linked or copied
+   `keel-factory/` is KEEL's whole footprint (notes in `<ops>`), and the job ends with a
+   debrief at `<ops>/debrief.md` whose claims carry Evidence / Inferred / Missing labels.
+   A one-line fix still gets its debrief; "trivial" (§2 below) skips KEEL's phases, never
+   the operator protocol.
+6. **Owner mode: go to the routing procedure below.**
+
+In owner mode the tier and the **stop mode** go in `docs/STATE.md` when BRIEF starts.
+The stop mode is checkpoint by default and supervised at PLATFORM
+(`../../framework/TIERS.md`, "Stop modes"). If the user's message doesn't settle it, it
+is one question in BRIEF's first round, not a separate one.
 
 ## The routing procedure
 
@@ -30,10 +166,11 @@ fits.
 
 ### 0. Is there a live handoff to resume?
 
-If a handoff document exists at the expected scratch path → **run `resume-handoff`**
-(`../../skills-board/*/resume-handoff`). It re-verifies the repo against what the handoff
-claims before acting. Do not re-orient from scratch when a previous session already left
-a verified baseline. Stop here.
+If a handoff document exists at the expected scratch path (`.scratch/handoff.md`, or
+`<ops>/handoff.md` in operator mode) → **run `resume-handoff`**
+(`../../skills-board/claude/resume-handoff`). It re-verifies the repo against what the
+handoff claims before acting. Do not re-orient from scratch when a previous session
+already left a verified baseline. Stop here.
 
 ### 1. Is this project already under way?
 
@@ -46,7 +183,8 @@ exact state — before doing anything else. Stop here.
 ### 2. Is the task trivial?
 
 A rename, a typo, a copy change, a one-line config edit, or the user says "just do it" →
-**skip the framework.** Say you are skipping, and do the task. Stop here.
+**skip the framework.** Say you are skipping, and do the task. In operator mode the
+debrief still follows (`../../../OPERATOR.md` §4). Stop here.
 
 ### 3. Is the target opaque — a system you cannot fully read as source?
 
@@ -86,15 +224,17 @@ audit later. Route by the actual question — see the gradient in `../../../ARCH
 
 Greenfield, or an existing system you have already oriented to → **run the `keel` skill**
 from BRIEF. Pick the tier, grill the brief into decisions (via `task-interview`), and
-proceed through CONTRACT → DESIGN → SLICE → PROVE, stopping for approval at each gate.
+proceed through CONTRACT → DESIGN → SLICE → PROVE, stopping where the stop mode says:
+every gate when supervised; once up front and at the PROVE report when checkpoint.
 
 ## After routing
 
 - The discipline you routed to owns the work and the conclusion. HELM does not supervise
   it.
 - The six standing rules (`../../framework/RULES.md`) run underneath whatever you routed
-  to — evidence labels, traceability, cost, context, the data boundary, the instrument
-  rule. HELM does not enforce them; it does not get to turn them off either.
+  to — brief, evidence, traceability, context, cost, instrument — and so does the
+  data-boundary rule, which stands on its own in `../../../CLAUDE.md`. HELM does not
+  enforce them; it does not get to turn them off either.
 - The doctrine (`../../framework/DOCTRINE.md`) is the standard the routed-to work is held
   to: precise not bloated, researched not guessed, scrutinized not asserted,
   altitude-aware, compounding. HELM routes to the discipline; the doctrine says how well
@@ -110,10 +250,10 @@ between them on demand — the systems-design-interview stance (`../../framework
 §4). The artifacts make the switch cheap and lossless: zoom out by reading the artifact at
 that altitude (BRIEF/CONTRACT/RECON/ARCHITECTURE), drill down with grep/read/run on the
 specific file or failing command. Check each against the other — a slice against the brief
-it serves, a strategy against what `CAPABILITIES.md` says can actually be built here — and
-name the altitude when you change it so the user can follow. A business-strategy question
-and "why is this tool not loading right" are the same session at different altitudes, not
-different tools.
+it serves, a strategy against what `../../framework/CAPABILITIES.md` says can actually be
+built here — and name the altitude when you change it so the user can follow. A
+business-strategy question and "why is this tool not loading right" are the same session
+at different altitudes, not different tools.
 
 ## What HELM must never do
 

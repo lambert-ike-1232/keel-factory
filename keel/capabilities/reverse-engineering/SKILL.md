@@ -1,6 +1,6 @@
 ---
 name: reverse-engineering
-description: Perceive a system KEEL cannot read as source — a shipped binary, a running process, a network or signal capture, firmware, an obfuscated or packaged bundle — by reaching for REA under KEEL's authorization and evidence discipline. Use when a RECON map, a SLICE, a hard bug, or an audit hits a surface that source analysis cannot answer. Not for ordinary source-repository work.
+description: Perceive what has no readable source (a shipped binary, a running process, a network or signal capture, firmware, an obfuscated bundle) through REA, under an authorization gate, read-only first. Use when source analysis can't answer the question. Not for ordinary source repositories.
 ---
 
 # Reverse engineering — the perception capability
@@ -16,6 +16,11 @@ framework.** For the mechanics of a given target, defer to REA's own installed s
 Perception is a different kind of thing from KEEL's phases — see `../../../ARCHITECTURE.md`
 §4. The phases are about time; perception is about *access*. REA is a sense the agent
 can reach for from inside any phase; it is not a phase of its own.
+
+In a copied skill (this file sits under a project's `.claude/skills/` or
+`.agents/skills/`, not under `keel/`), read every `../` path under `keel-factory/keel/`,
+and root files such as `CLAUDE.md` under `keel-factory/`, even when the project has a
+file of that name.
 
 ## Reach for REA only when source cannot answer the question
 
@@ -41,13 +46,13 @@ That power is exactly why it is bound to KEEL's data-boundary discipline
 (`../../../CLAUDE.md` → "Data boundary"), extended here:
 
 1. **Authorized targets only.** Adopt REA's own lawful-use boundary verbatim (see
-   `REA-CROSSREF.md` §4 and REA's `DISCLAIMER.md`): security research, malware/incident
-   analysis, vulnerability research and coordinated disclosure, CTFs and education,
-   interoperability, software preservation, and debugging or auditing software you own or
-   are authorized to examine. The factory will not help circumvent protection measures,
-   bypass access controls on systems you are not authorized to test, or any other use REA
-   itself refuses. If the target's authorization is unclear, **stop and ask** — naming
-   the exact target — before the first REA call.
+   `../../framework/REA-CROSSREF.md` §4 and REA's `DISCLAIMER.md`): security research,
+   malware/incident analysis, vulnerability research and coordinated disclosure, CTFs and
+   education, interoperability, software preservation, and debugging or auditing software
+   you own or are authorized to examine. The factory will not help circumvent protection
+   measures, bypass access controls on systems you are not authorized to test, or any
+   other use REA itself refuses. If the target's authorization is unclear, **stop and
+   ask** — naming the exact target — before the first REA call.
 2. **Read-only before anything that acts.** Static inspection is the default and needs
    only the authorization to examine the artifact. Any operation that **executes** a
    target, **attaches** to a live process, **mutates**, **intercepts** traffic, or
@@ -97,13 +102,13 @@ observed behavior separate from design choices (REA's own closing instruction).
 ## Connecting REA
 
 REA is a separate tool with its own install (CLI + MCP server), not bundled into this
-factory — same "cited, not absorbed" posture as ECC (`REA-CROSSREF.md` §1). It is reached
-through its own `reverse-engineer-anything` skill once installed. If REA tools are not
-present in the session, follow REA's own connection-and-recovery guidance rather than
-improvising setup; do not install unrelated software to repair it. If REA is not
-installed and the user wants perception, say so plainly and point them at it — do not
-attempt opaque analysis by hand and present the guesses as if they were REA's
-evidence-grade output.
+factory — same "cited, not absorbed" posture as ECC (`../../framework/REA-CROSSREF.md`
+§1). It is reached through its own `reverse-engineer-anything` skill once installed. If
+REA tools are not present in the session, follow REA's own connection-and-recovery
+guidance rather than improvising setup; do not install unrelated software to repair it.
+If REA is not installed and the user wants perception, say so plainly and point them at
+it — do not attempt opaque analysis by hand and present the guesses as if they were
+REA's evidence-grade output.
 
 ## What this capability does NOT do
 

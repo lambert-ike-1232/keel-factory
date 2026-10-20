@@ -1,8 +1,7 @@
 ---
 name: keel
-description: Drive the KEEL engineering framework - pick a tier, then run the BRIEF, CONTRACT, DESIGN, SLICE, PROVE phases with the right weight, producing the fixed artifact set. Use when starting a project or feature, resuming one after a gap, or auditing a codebase against a claim that it is done. Not for trivial tweaks.
+description: Run the KEEL phases (BRIEF, CONTRACT, DESIGN, SLICE, PROVE) at the right tier and stop mode, producing the docs/ artifact set. Use when HELM routes to new work, or to resume, recon or audit a KEEL project. Not for trivial edits.
 argument-hint: "recon | brief | contract | design | slice | prove | resume | audit, or nothing to pick up where you left off"
-disable-model-invocation: true
 ---
 
 # KEEL
@@ -13,30 +12,44 @@ three tiers, six standing rules.
 **The framework documents are the source of truth.** Read them rather than working
 from this summary:
 
-- `framework/PHASES.md` — the five phases in operational detail
-- `framework/TIERS.md` — SPRINT / STANDARD / PLATFORM and how to pick
-- `framework/RULES.md` — the six standing rules
-- `framework/COST.md` — cost as an engineering constraint
-- `framework/RECON.md` — the orientation gate that runs before BRIEF on an existing system
-- `framework/DOCTRINE.md` — the standard all of this is held to (how well, not just what)
-- `framework/CAPABILITIES.md` — what the agent can physically do; never ask for more
-- `framework/TASK-BOARD-CROSSREF.md` — why SLICE runs on the task board, not a checklist
-- `templates/` — the artifact set
-- `skills-board/` — the task board, interview, and handoff skills this file delegates to
-- `capabilities/reverse-engineering/` — PERCEPTION sense: reach for REA when source can't answer
-- `capabilities/deep-research/` — RESEARCH sense: find out what you don't know, properly
-- `../ARCHITECTURE.md` — how all of this, plus the harness, ropes together (read if lost)
+- `../../framework/PHASES.md` — the five phases in operational detail
+- `../../framework/TIERS.md` — SPRINT / STANDARD / PLATFORM and how to pick
+- `../../framework/RULES.md` — the six standing rules
+- `../../framework/COST.md` — cost as an engineering constraint
+- `../../framework/RECON.md` — the orientation gate that runs before BRIEF on an existing system
+- `../../framework/DOCTRINE.md` — the standard all of this is held to (how well, not just what)
+- `../../framework/CAPABILITIES.md` — what the agent can physically do; never ask for more
+- `../../framework/TASK-BOARD-CROSSREF.md` — why SLICE runs on the task board, not a checklist
+- `../../templates/` — the artifact set
+- `../../skills-board/` — the task board, interview, and handoff skills this file delegates to
+- `../../capabilities/reverse-engineering/` — PERCEPTION sense: reach for REA when source can't answer
+- `../../capabilities/deep-research/` — RESEARCH sense: find out what you don't know, properly
+- `../../../ARCHITECTURE.md` — how all of this, plus the harness, ropes together (read if lost)
 
-Locate them relative to this repo's KEEL installation. If they are not present, tell
-the user and work from this file alone.
+Every path in this file is relative to this skill's own folder, so it resolves the same
+way under the plugin or a linked `keel-factory/`.
 
-This skill is usually reached through **HELM** (`skills/helm/SKILL.md`), the front door
+In a copied skill (this file sits under a project's `.claude/skills/` or
+`.agents/skills/`, not under `keel/`), read every `../` path under `keel-factory/keel/`,
+and root files such as `CLAUDE.md` under `keel-factory/`, even when the project has a
+file of that name.
+
+If a file is in neither place, tell the user and work from this file alone.
+
+This skill is usually reached through **HELM** (`../helm/SKILL.md`), the front door
 that decides whether a situation even wants KEEL versus resume / recon / perception /
-audit. If you arrived here directly, the orientation below does HELM's job for the KEEL
-branches.
+audit. If you arrived here directly, step 0 below switches KEEL on first, and the rest of
+the orientation does HELM's job for the KEEL branches.
 
 ## First, orient
 
+0. If KEEL is not switched on here (no `.keel/` or `keel-factory/` by HELM's rule), or
+   a `.keel/` holds no `keel.json`, run HELM's switch-on first (`../helm/SKILL.md`, its
+   "First — is KEEL switched on here" section), then come back. In operator mode
+   (`.keel/keel.json` says operator; or no role is recorded, as with a linked or copied
+   `keel-factory/`, and by HELM's rule the project carries its own instructions that are
+   not KEEL's; or the session note, the user or your brief says so; or switch-on just
+   decided it), follow `../../../OPERATOR.md` instead of the phases below.
 1. **If `docs/STATE.md` exists** for the work being discussed, read it, then every
    document in `docs/`, then the task board (run `task-board-triage` first if it looks
    stale). Continue from the first unapproved phase or first non-`completed` task.
@@ -44,13 +57,15 @@ branches.
    it. If a handoff document exists at the expected path, run `resume-handoff` instead
    of doing this by hand — it verifies the repo against it before acting.
 2. **If this is an existing or unfamiliar system and no `docs/RECON.md` exists yet, run
-   RECON before BRIEF** (`framework/RECON.md`). Understand the system and learn its house
+   RECON before BRIEF** (`../../framework/RECON.md`). Understand the system and learn its house
    style before proposing a change. RECON hands BRIEF a grounded direction and the
    conventions it must respect. Skip recon only for genuinely greenfield work or a change
    whose shape is already obvious.
-3. **Otherwise, pick the tier.** Run the ladder in `framework/TIERS.md` and state the
-   result. Default to **STANDARD**. If the user picked SPRINT, say what is being given
-   up.
+3. **Otherwise, pick the tier and the stop mode.** Run the ladder in
+   `../../framework/TIERS.md` and state the result. Default to **STANDARD**. If the user picked
+   SPRINT, say what is being given up. The stop mode defaults to **checkpoint**, and to
+   **supervised** at PLATFORM ("Stop modes" in the same file). Record both in
+   `docs/STATE.md`.
 4. **Skip KEEL entirely** for trivial work — a rename, a typo, a copy change, a
    one-line config edit — or when the user says to just do it. Say you are skipping,
    and do the task.
@@ -58,17 +73,37 @@ branches.
 ## The phases
 
 Run the phase the user named, or the next unapproved one. Full detail in
-`framework/PHASES.md`.
+`../../framework/PHASES.md`. The "Stop at" column is the **supervised** mode. In
+**checkpoint** mode the only stops are the up-front round (BRIEF and CONTRACT approved
+together) and the PROVE report; **unattended** keeps the same up-front approval and then
+runs inside `../../framework/LOOPS.md`. Every mode still halts for the reasons listed under
+"Stop modes" in `../../framework/TIERS.md`.
 
-| Phase | Produces | Stop at |
+| Phase | Produces | Stop at (supervised) |
 |---|---|---|
 | **BRIEF** | `docs/BRIEF.md` — rewrite with `[GUESS: ...]`, resolved; announcement | PLATFORM |
 | **CONTRACT** | `CONTRACT.md`, `ACCEPTANCE.md`, `schemas/`, `TRACEABILITY.md` (all `FAIL`), cost budget, **verified toolchain table**, **bound-numbers table** | STANDARD, PLATFORM |
 | **DESIGN** | `DESIGN.md` — signatures with no bodies, seams, depth check, cost ladder, test plan, least-confident list | STANDARD, PLATFORM |
 | **SLICE** | board tasks (`task-board-init`/`to-task`) + code, tracer bullet first | every slice boundary |
-| **PROVE** | **negative controls armed first**, then three-axis review, gate run, traceability promoted, cost measured against its assertion, honest status | every tier |
+| **PROVE** | **always through the `keel-prove` skill**, never inline: negative controls armed first, then the review by fresh-context reviewer agents (two axes at SPRINT, where the builder may run the gate's commands; three above), gate run, traceability promoted, cost measured against its assertion, honest status | every tier |
+
+**PROVE's review is never done by the session that built the work.** Reaching PROVE
+means running the `keel-prove` skill (`../keel-prove/SKILL.md`), which hands the review
+to the reviewer agents (`keel:prove-standards`, `keel:prove-spec`, `keel:prove-gate`
+under the plugin). A review written by the builder is not independent, and the status
+report must not call it one. At SPRINT the builder may run the gate's commands itself,
+because an exit code does not depend on who runs it, and the report says so. If no
+sub-agent can be spawned, say so in the report.
 
 ### At a stop point
+
+In checkpoint mode the up-front stop covers BRIEF and CONTRACT at once. Ask BRIEF's
+questions and CONTRACT's production questions (users and auth, data and retention,
+secrets, deploy target and observability, external services, toolchain, cost ceiling)
+in the same round, write both
+documents, and ask **"Approve BRIEF and CONTRACT, or what should change?"** Between that
+stop and the PROVE report, a phase boundary is a progress note to the user, not a
+question: say what was decided and what is next, then go on.
 
 1. Write the document to disk.
 2. Summarise to the user: at most 5-10 bullet decisions, plus the path. Lead with the
@@ -116,8 +151,8 @@ Run the phase the user named, or the next unapproved one. Full detail in
 ## Interviewing
 
 Resolving the brief at STANDARD or above runs on the `task-interview` skill
-(`skills-board/claude/task-interview/SKILL.md`), not a restatement of it here — see
-`framework/TASK-BOARD-CROSSREF.md` §3 for why. Its operating principle is the same one
+(`../../skills-board/claude/task-interview/SKILL.md`), not a restatement of it here — see
+`../../framework/TASK-BOARD-CROSSREF.md` §3 for why. Its operating principle is the same one
 this file always stated: **finding facts is your job; making decisions is the user's.**
 It explores the codebase for anything the code can answer and asks the user only what
 the code genuinely cannot, walking every open question down to a recorded decision
@@ -125,12 +160,12 @@ rather than a guess. Done when nothing is left open.
 
 KEEL adds one thing on top of `task-interview`, without editing it: **every question it
 puts to the user arrives with two or three concrete options and your recommended pick**,
-researched first where the options turn on knowledge you lack (`framework/DOCTRINE.md`
-§2, and the standing rule in `CLAUDE.md`). Ask every question whose prerequisites are settled
-together in one numbered round. That is the same dependency order `task-interview`
-walks: its warning against batching every question at once is about asking dependent
-questions early, and a question waiting on another's answer still waits for the next
-round.
+researched first where the options turn on knowledge you lack
+(`../../framework/DOCTRINE.md` §2, and the standing rule in `../../../CLAUDE.md`). Ask
+every question whose prerequisites are settled together in one numbered round. That is
+the same dependency order `task-interview` walks: its warning against batching every
+question at once is about asking dependent questions early, and a question waiting on
+another's answer still waits for the next round.
 
 If `task-interview` is not installed for some reason, fall back to that same numbered
 round by hand, then wait, rather than skipping the interview.
@@ -142,7 +177,7 @@ round by hand, then wait, rather than skipping the interview.
 - **File slices as board tasks**, not a checklist. One task per slice via `to-task`;
   run each under `focused-implementation`, or several non-interfering ones together
   under `orchestrate-implementation`. Splitting that work across more than one agent
-  goes through `crew` (`skills/crew/SKILL.md`) first.
+  goes through `crew` (`../crew/SKILL.md`) first.
 - **Test at confirmed seams only.** Red before green. One seam, one test, one minimal
   implementation per cycle. Refactoring belongs to PROVE, not to the loop.
 - **Never write a test that cannot fail** — one that passes against pre-change code,
@@ -153,7 +188,9 @@ round by hand, then wait, rather than skipping the interview.
   individually passing tests still drop data between them.
 - **After every slice**, prove it works by running it and showing the result, close
   the task on the board, and propose the next step: the next slice, or the re-steer you
-  would recommend if this slice taught you something. Let the user confirm or redirect.
+  would recommend if this slice taught you something. In supervised mode, let the user
+  confirm or redirect; in checkpoint mode, say it and go on unless the re-steer changes
+  something BRIEF or CONTRACT settled, which is a halt.
 - **Running short on context mid-slice?** Use `handoff` rather than compacting blind —
   it's a self-contained document a fresh session can resume from with no memory of this
   conversation; the next session runs `resume-handoff` against it.
@@ -163,16 +200,16 @@ round by hand, then wait, rather than skipping the interview.
 - **`recon`** — orient to an existing or unfamiliar system before proposing changes:
   understand what's there, learn its house style, map it, and turn the assessment into a
   prioritized, convention-respecting improvement backlog. Fill in `docs/RECON.md`;
-  full discipline in `framework/RECON.md`. Runs before BRIEF, feeds it. This is the
+  full discipline in `../../framework/RECON.md`. Runs before BRIEF, feeds it. This is the
   entry point for "take on this project and learn how it does things."
 - **perception** — when a question depends on something you cannot read as source (a
   shipped binary, a running process, a capture, firmware, an obfuscated bundle), reach
-  for REA through `capabilities/reverse-engineering/SKILL.md`, under its authorization
+  for REA through `../../capabilities/reverse-engineering/SKILL.md`, under its authorization
   gate. It serves recon, a hard bug, SLICE interop, or an audit — it is a sense, not a
   phase. Skip it entirely for ordinary source work.
 - **deep research** — when a decision turns on knowledge you lack and cannot derive from
   the repo (a technique, a protocol, a best practice, a tradeoff), reach for
-  `capabilities/deep-research/SKILL.md`: authoritative sources, triangulated,
+  `../../capabilities/deep-research/SKILL.md`: authoritative sources, triangulated,
   evidence-labeled, tied to the decision. The required alternative to guessing. A
   researched claim stays `Inferred` until the system confirms it. The other sense beside
   perception — skip it for what the repo already answers.
