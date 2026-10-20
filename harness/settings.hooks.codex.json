@@ -1,6 +1,28 @@
 {
+  "description": "KEEL for Codex: the always-on layer and the data-boundary guard, active only where .keel/ or keel-factory/ exists, plus ECC's git-hook-bypass check, which needs Node.js (KEEL's two hooks need only python3). install_plugin.py --codex-hooks writes the first two with real paths; Codex runs any of them only after you trust it in /hooks.",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "g=\"/ABSOLUTE/PATH/TO/harness/hooks/keel_hook.py\"; [ -f \"$g\" ] || exit 0; exec python3 \"$g\" session --harness codex",
+            "statusMessage": "KEEL: loading the always-on layer"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
+      {
+        "matcher": "Bash|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "g=\"/ABSOLUTE/PATH/TO/harness/hooks/keel_hook.py\"; [ -f \"$g\" ] || exit 0; exec python3 \"$g\" guard --harness codex",
+            "statusMessage": "KEEL: checking the data boundary"
+          }
+        ]
+      },
       {
         "matcher": "Bash",
         "hooks": [
@@ -8,38 +30,6 @@
             "type": "command",
             "command": "node /ABSOLUTE/PATH/TO/harness/hooks/block-no-verify.js",
             "statusMessage": "Checking for git hook bypass"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node /ABSOLUTE/PATH/TO/harness/hooks/config-protection.js",
-            "statusMessage": "Checking for protected config edit"
-          }
-        ]
-      },
-      {
-        "matcher": "Read|Edit|Write|Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 /ABSOLUTE/PATH/TO/harness/hooks/data-boundary-guard.py",
-            "statusMessage": "Checking data boundary"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node /ABSOLUTE/PATH/TO/harness/hooks/cost-tracker.js",
-            "statusMessage": "Recording cost"
           }
         ]
       }

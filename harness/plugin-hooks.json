@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "g=\"${CLAUDE_PLUGIN_ROOT}/harness/hooks/keel_hook.py\"; [ -f \"$g\" ] || exit 0; exec python3 \"$g\" session"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|MultiEdit|Write|NotebookEdit|Glob|Grep|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "g=\"${CLAUDE_PLUGIN_ROOT}/harness/hooks/keel_hook.py\"; [ -f \"$g\" ] || exit 0; exec python3 \"$g\" guard"
+          }
+        ]
+      }
+    ]
+  }
+}
