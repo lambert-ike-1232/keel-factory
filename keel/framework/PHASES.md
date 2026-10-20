@@ -7,7 +7,11 @@ The phases never change. How heavy each one is changes with the tier
 (see [RULES.md](RULES.md)).
 
 **Stop points** are marked. A stop is a real blocking approval: work does not continue
-until a human says yes. How many stops you get is set by the tier.
+until a human says yes. How many stops you get is set by the tier, and which of them
+block is set by the stop mode. The marks below are the **supervised** mode. In
+**checkpoint** mode, the default below PLATFORM, the stops collapse to one approval of
+BRIEF and CONTRACT together and the PROVE report; the halts every mode keeps are listed
+under "Stop modes" in [TIERS.md](TIERS.md).
 
 ---
 

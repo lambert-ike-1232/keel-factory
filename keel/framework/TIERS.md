@@ -39,7 +39,7 @@ a product needs.
 
 ## The Floor
 
-Every tier guarantees these six. They do not scale down, and SPRINT is not permission
+Every tier guarantees these seven. They do not scale down, and SPRINT is not permission
 to skip them. This is what makes "in a pinch" mean *fast*, never *embarrassing*.
 
 1. **A README a stranger can run from cold.** Not a description: instructions that work.
@@ -157,7 +157,61 @@ boundary.
 | Cost measured + in CI | no | measured | + CI |
 | ADRs / `CONTEXT.md` | no | `CONTEXT.md` | both |
 | Ops docs, eval harness, audit, demo | no | no | yes |
-| Blocking stops | 1 | 3 | 4-5 |
+| Blocking stops (supervised mode) | 1 | 3 | 4-5 |
+
+---
+
+## Stop modes
+
+The tier sets how heavy each phase is. The **stop mode** is a second dial: it sets which
+of the tier's stops wait for a person. It never adds, removes or reorders a phase, and
+it never lightens what a phase must produce.
+
+| Mode | Waits for a person at | Runs on its own |
+|---|---|---|
+| **supervised** | every blocking stop the tier lists above | nothing between stops |
+| **checkpoint** | one up-front round, one approval of BRIEF and CONTRACT together, and the PROVE report | DESIGN, SLICE, and the PROVE review itself |
+| **unattended** | the same up-front approval, then nothing until the PROVE report | everything after the approval, inside `LOOPS.md` |
+
+**Defaults:** checkpoint at SPRINT and STANDARD; supervised at PLATFORM, whose decisions
+outlive the project and reach real users. The user can pick any mode; record it in
+`docs/STATE.md` beside the tier. *(Chosen by the framework's owner, 2026-10-18.)*
+
+**The up-front round** asks BRIEF's whole frontier and CONTRACT's production questions
+together: who uses it and how they sign in, what data it holds and how long it keeps it,
+where secrets live, where it runs and how anyone will know it is healthy (logs,
+monitoring), which outside services it calls, the toolchain the checks need, and the
+cost ceiling. Each question carries options and a recommended pick (`DOCTRINE.md` §2).
+A question that depends on another's answer waits for a second round, still before the
+approval.
+
+**In Codex** the round depends on the mode (`CAPABILITIES.md`, Codex table; Inferred: no
+Codex trial has run one). In Plan mode `request_user_input` takes options, so run the
+round there. In Default mode there is no choice prompt, and KEEL's question rule asks one
+question per turn, as a sentence that names the pick and the alternatives (`DOCTRINE.md`
+§2, and the question rule in the always-on `CLAUDE.md`). The round then takes several
+turns, one per question, all still before the approval.
+
+**Why checkpoint is safe:** not because a person approves every phase, but because the
+approved CONTRACT fixes what "done" means as runnable checks, every slice is proven by
+running it, and PROVE is an independent review in a fresh context. A phase boundary in
+checkpoint mode is a progress note (what was decided, what is next), not a question.
+
+**Every mode still halts for:**
+
+1. the data boundary, and any action that is irreversible or outward-facing (push,
+   deploy, publish, migrate, delete what it did not create, send to an outside service);
+2. a decision BRIEF and CONTRACT don't settle and that changes the outcome — asked with
+   options and a pick;
+3. a check still failing after three honest attempts — named, with what was tried;
+4. a finding that breaks the approved CONTRACT — backtracking needs re-approval;
+5. the cost ceiling.
+
+**Unattended has nobody to ask.** There, a halt means: file it as a board task with
+`gate: owner` or `gate: manual`, carry on with work that does not depend on it, and stop
+at the PROVE report. Unattended needs `LOOPS.md`'s seven fields written into
+`docs/STATE.md` before it starts, and a harness that can run without a person (a
+headless run with a cost cap; `LOOPS.md` §6 says what each harness offers).
 
 ---
 

@@ -1,4 +1,4 @@
-# The Five Standing Rules
+# The Six Standing Rules
 
 These run underneath every phase, at every tier. Phases are what you do; rules are
 what stays true while you do it.

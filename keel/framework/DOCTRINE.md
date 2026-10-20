@@ -63,6 +63,18 @@ data-boundary question is the deliberate exception: it names one specific action
 yes or no, because a risky action dressed up as one option among several is easier to
 approve by accident.
 
+**How the question reaches the user depends on the harness, and the harness's own rules
+win where they conflict** (`CAPABILITIES.md`, the harness table). In Claude Code, an
+interactive session has a choice prompt (AskUserQuestion: up to four questions, two to
+four options each, recommended option first); use it. A headless run has none, so the
+round is a numbered list in the reply. Codex's structured question tool works only in
+Plan mode, and its Default-mode prompt tells the model not to write multiple-choice
+questions as text. So in Codex, run an interview round in Plan mode, where the tool takes
+options with the recommended one first; outside it, ask one question as a sentence that
+states the recommended pick and names the alternatives ("I'll use Postgres unless you'd
+rather SQLite or a hosted database"), and keep the rest for the next turn. The substance
+is the same everywhere: the finding-out done, the options concrete, the pick stated.
+
 ## 3. Scrutinize the idea before building it — so systems do not break
 
 **The standard:** an idea that does not meet reliability standards gets challenged, hard,
