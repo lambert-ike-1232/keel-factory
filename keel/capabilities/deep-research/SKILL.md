@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: When a decision depends on knowledge you do not have and cannot derive from the codebase — an unfamiliar technique, a library's real behavior, a protocol, a best practice, a standard, a tradeoff you cannot resolve from first principles — find it out properly before deciding. Authoritative sources, triangulated, evidence-labeled, tied to the decision it serves. Use when "I don't know how" would otherwise become a guess. Not for questions the repo or its docs already answer.
+description: Find out what you don't know before deciding. Authoritative sources, triangulated, evidence-labeled, tied to the decision they serve. Use when a choice turns on a technique, a library's real behavior, a protocol, a standard or a best practice the repo can't answer, instead of guessing.
 ---
 
 # Deep research — when you don't know, find out
@@ -15,6 +15,11 @@ This is a **sense**, like perception (`../reverse-engineering/`). Perception see
 with no readable source; research sees knowledge that is not in this repo. Both feed a
 decision in a discipline; neither is a phase of its own. The architecture places them
 together in `../../../ARCHITECTURE.md` §1 as the perception layer.
+
+In a copied skill (this file sits under a project's `.claude/skills/` or
+`.agents/skills/`, not under `keel/`), read every `../` path under `keel-factory/keel/`,
+and root files such as `CLAUDE.md` under `keel-factory/`, even when the project has a
+file of that name.
 
 ## First: is this actually a research question?
 
@@ -72,7 +77,7 @@ This capability is grounded in tools the agent actually has (see
   into independent questions, assign distinct scopes, point workers at evidence" pattern.)
 - **A library/tool's real behavior** → prefer its official docs and its actual source or
   issue tracker over third-hand descriptions; where a quick experiment settles it faster
-  and the environment allows, a `spike` (scratch prototype, `../../skills-board/*/spike`)
+  and the environment allows, a `spike` (scratch prototype, `../../skills-board/claude/spike`)
   is itself primary evidence — running the thing beats reading about it.
 
 If none of these are available in the current environment, say so plainly and tell the

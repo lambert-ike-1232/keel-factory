@@ -20,6 +20,8 @@ brief did not foresee still goes the right way.>
 - **Off-limits:** every other lane's write set, the plan task, and the task board.
   Read anything you need; write only your write set.
 - **Mode:** <worktree | shared | read-only>
+- **KEEL role:** <owner | operator>; in operator mode the package's rules win and KEEL's
+  records go only in `<ops>`: <path>
 - **Base:** <the commit you start from>
 
 ## Decisions already made

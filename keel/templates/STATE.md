@@ -19,6 +19,23 @@ itself is tracked on the task board (`task-board-init`), not here — see
 
 **Tier:** SPRINT / STANDARD / PLATFORM
 
+**Stop mode:** supervised / checkpoint / unattended — default checkpoint, supervised at
+PLATFORM (`keel/framework/TIERS.md`, "Stop modes"). In checkpoint and unattended mode,
+DESIGN and SLICE show "done [date], no stop" rather than APPROVED.
+
+**Unattended only** — the seven fields `keel/framework/LOOPS.md` §2 requires, filled in
+before the run starts, or the run does not start:
+
+| Field | Value |
+|---|---|
+| Trigger | |
+| Per-iteration done condition | |
+| Done-checker (independent of the worker) | |
+| Stop-entirely condition | |
+| Escalation trigger | |
+| Cost ceiling (per iteration, per period) | |
+| LAND step | |
+
 **Resume rule:** read this file, then every document in `docs/`, then the task board
 (`.scratch/task_board/`, via `task-board-triage` if it looks stale), then continue
 from the first unapproved phase or the first non-`completed` task. Never redo an
