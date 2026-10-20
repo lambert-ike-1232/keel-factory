@@ -1,0 +1,6 @@
+interface:
+  display_name: HELM
+  short_description: "The front door: switch KEEL on as owner or operator, then route"
+  default_prompt: Use $keel:helm to orient in this project and route to the right KEEL discipline.
+policy:
+  allow_implicit_invocation: true

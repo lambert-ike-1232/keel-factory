@@ -1,0 +1,6 @@
+interface:
+  display_name: Reverse Engineering
+  short_description: Perceive binaries and running systems, authorized targets only
+  default_prompt: Use $keel:reverse-engineering on an authorized binary or capture, read-only first.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: CREW
+  short_description: Split work across agents without two writers on one file
+  default_prompt: Use $keel:crew to plan parallel lanes for this work.
+policy:
+  allow_implicit_invocation: true
