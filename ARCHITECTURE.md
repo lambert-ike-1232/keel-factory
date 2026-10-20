@@ -51,28 +51,43 @@ anything that knew the sequence. That thing is the fifth layer.
 ## 2. The fifth layer: HELM, the thin orchestrator
 
 > **HELM is a decision procedure, not an engine.** It reads the situation in front of
-> it and routes to the right discipline. It holds no state of its own, does no analysis
-> of its own, and adds no new rules. The ship already has a keel; HELM is only where you
-> steer.
+> it and routes to the right discipline. It has no method of its own: apart from
+> switching KEEL on, it only routes. It does no analysis of its own and adds no new
+> rules. The ship already has a keel; HELM is only where you steer.
 
 This is deliberate, and it is the single most important design decision in this
 document. The user asked whether this should become "an entire orchestrator or master
 control module." The honest answer, and the one consistent with KEEL's own standing
-warning against speculative generality and premature abstraction (`keel/framework/RULES.md`),
-is: **the orchestrator must be thin, or it becomes the very over-engineering the
-framework exists to prevent.** A heavy master-control engine would be a second method
-competing with KEEL — exactly the same-clock conflict THE-STACK.md says to avoid.
+warning against speculative generality and premature abstraction
+(`keel/framework/RULES.md`), is: **the orchestrator must be thin, or it becomes the
+very over-engineering the framework exists to prevent.** A heavy master-control engine
+would be a second method competing with KEEL — exactly the same-clock conflict
+THE-STACK.md says to avoid.
 
-So HELM is one routing procedure, implemented in two places that say the same thing:
-the `helm` skill (`keel/skills/helm/SKILL.md`) and the "On session start" section of a
-project's `CLAUDE.md`/`AGENTS.md`. It classifies, then hands off. That is all.
+So HELM is one routing procedure, written once, in the `helm` skill
+(`keel/skills/helm/SKILL.md`). The always-on layer (`CLAUDE.md`: injected by the session
+hook, read by HELM when it switches KEEL on, or carried in the project's own `CLAUDE.md`
+or `AGENTS.md`) only points at it. It classifies, then hands off. That is all.
 
-**Two modes, one router.** Usually KEEL is the project's own framework: its `CLAUDE.md`
-sits at the root and HELM routes every session. The factory can also be dropped into
-someone else's package to do one job. That is operator mode (`OPERATOR.md`):
+**How it reaches the agent (v1.1).** The master folder is a Claude Code plugin and the
+source of Codex's skill links (`harness/install_plugin.py`). Both harnesses list KEEL's
+skills by name and description and load a skill's body only when it is used. One small
+hook script (`harness/hooks/keel_hook.py`) does the two jobs prose cannot: it injects the
+always-on layer at session start, and it hands every file-touching tool call to the
+data-boundary guard. Both act only where KEEL is switched on: a `.keel/` folder or a
+`keel-factory/`, linked or copied, in the project's folder, or in a folder above it
+inside the same git repository. Outside git only the session's own folder counts. KEEL
+is never on inside the kit itself or from a marker in `$HOME` or `/`, and the master's
+own git checkout never switches on the folder that holds it; the exact rule is in
+[`harness/README.md`](harness/README.md). What each harness really offers, row by row
+with evidence, is in `keel/framework/CAPABILITIES.md`.
+
+**Two modes, one router.** In owner mode KEEL is the project's own framework:
+`.keel/keel.json` says `owner`, and HELM routes every session. The factory can also be
+dropped into someone else's package to do one job. That is operator mode (`OPERATOR.md`):
 
 - the package's own instructions are the brief;
-- KEEL keeps its state in `keel-factory/.ops/`;
+- KEEL keeps its state in `.keel/ops/` (or `keel-factory/.ops/` with a linked kit);
 - phase stops collapse to the rules of engagement;
 - the package is left exactly as the mission leaves it.
 
@@ -276,7 +291,8 @@ never upgraded to `Evidence` without running the thing here.
    the framework never asks for more. (Short; read it before trusting any claim of a
    capability.)
 5. `keel/skills/helm/SKILL.md` — the front door that routes to everything else.
-6. `keel/framework/RECON.md` — how an existing system gets understood before it gets changed.
+6. `keel/framework/RECON.md` — how an existing system gets understood before it gets
+   changed.
 7. `keel/framework/CREW.md` — how more than one agent works on one project without
    collisions. Read it before splitting work.
 8. The cross-refs (`ECC-`, `MCKNIGHT-`, `TASK-BOARD-`, `REA-CROSSREF.md`) — how each

@@ -1,17 +1,35 @@
 # Quickstart — from roadmap to running code
 
-**Fastest path:** copy this whole folder into the new project's root as `keel-factory/`,
-paste the prompt from [`START-PROMPTS.md`](START-PROMPTS.md) as your first message to
-whichever coding agent you're using, and it does everything below itself — scaffolding,
-wiring and proving the hooks, then interviewing you for the brief. What follows is what
-that prompt is actually asking the agent to do — read it if you want to do any step by
-hand.
+**Fastest path (v1.1):** install KEEL once per machine with
+`python3 "$KEEL/harness/install_plugin.py" --codex`, where `$KEEL` is the master's folder
+([`MANUAL.md`](MANUAL.md) section 3), open Claude Code or Codex inside the project, and
+say `Use KEEL: <what you want>`. HELM does everything below itself; there is nothing to
+copy into the project. It records the role in `.keel/keel.json`; in your own project,
+commit that file with the work. Never commit `.keel/data-boundary-allow`: it is your own
+local override. Stage `.keel/keel.json` by name, never `.keel/` as a whole. A project
+`CLAUDE.md` that holds v1.0's copy of the layer gets no import line here, because there
+is no `keel-factory/` to import from: delete KEEL's v1.0 text from it (the session hook
+then supplies the layer), or replace it with v1.1's `CLAUDE.md`
+([`MANUAL.md`](MANUAL.md) section 11). For Codex, `--codex` gives the skills only:
+Codex's guard and session hook need `--codex --codex-hooks` and your approval of both of
+KEEL's hooks in Codex's `/hooks`, and no Codex session has yet been seen blocking
+(Missing evidence).
+[`START-PROMPTS.md`](START-PROMPTS.md) has the table of what to say after "Use KEEL:".
+
+**Without the plugin:** link (or copy) this folder into the new project's root as
+`keel-factory/` (§0 below), paste the prompt from [`START-PROMPTS.md`](START-PROMPTS.md)
+as your first message to whichever coding agent you're using, and it does everything
+below itself — scaffolding, wiring and proving the hooks, then interviewing you for the
+brief. What follows is what that prompt is actually asking the agent to do — read it if
+you want to do any step by hand.
 
 ## 0. Set up the new project
 
 ```bash
 # Link the kit in, so the master stays the only copy (or rsync a full copy instead,
-# leaving out .git/, .scratch/ and __pycache__/, if the project must carry its own):
+# leaving out .git/, .scratch/, __pycache__/ and .DS_Store, if the project must carry
+# its own: MANUAL.md section 4 has the command):
+mkdir -p ~/path/to/new-project
 python3 "$KEEL/harness/link_kit.py" ~/path/to/new-project
 cd ~/path/to/new-project
 mkdir -p docs
@@ -28,18 +46,24 @@ done
 `CLAUDE.md` already references `keel-factory/` by relative path, so this works as soon
 as it's copied in — nothing to edit. **If the project already has a `CLAUDE.md`, the last
 line leaves it alone:** add the line `@keel-factory/CLAUDE.md` to it instead, which Claude
-Code reads as an import. If the project relies on `AGENTS.md` and has no `CLAUDE.md`, a new
-`CLAUDE.md` must also say `@AGENTS.md`; once a `CLAUDE.md` exists, Claude Code stops
-reading `AGENTS.md` by itself.
+Code reads as an import. If that file is v1.0's copy of the layer (it says "This project
+was started from KEEL FACTORY."), replace the copy with that line. If the project relies
+on `AGENTS.md`, its `CLAUDE.md` must also say `@AGENTS.md`: Claude Code reads `AGENTS.md`
+only through that import (Inferred: KEEL's research into Claude Code's documentation, not
+probed here). The kit's `CLAUDE.md` has as its first section "Every session: route with
+HELM first", which **is** HELM, the router: from the first message on, the agent orients
+itself and picks resume / recon / brief / perception / audit without you having to say
+which.
 
 **Dropping it into someone else's package to do a job?** Skip this setup entirely: link
 the kit in and point the agent at `keel-factory/OPERATOR.md`. The package's own
 instructions become the mission, KEEL keeps its working notes inside `keel-factory/.ops/`,
-and nothing in the package changes except what the mission changes. Whatever you do,
-don't gitignore `keel-factory/`, `.scratch/` or `docs/` — the data-boundary guard blocks
-gitignored paths, so KEEL would be locked out of its own files. Its "On session start" section **is** HELM, the
-router: from the first message on, the agent orients itself and picks resume / recon /
-brief / perception / audit without you having to say which.
+and nothing in the package changes except what the mission changes. With the plugin,
+say `Use KEEL: this is someone else's package. <the job>` instead; the notes then go in
+`.keel/ops/`.
+
+Whatever you do, don't gitignore `.keel/`, `keel-factory/`, `.scratch/` or `docs/` — the
+data-boundary guard blocks gitignored paths, so KEEL would be locked out of its own files.
 
 **Before pointing this at a real project, wire in the data boundary** — see
 `keel-factory/harness/DATA-BOUNDARY.md`. It takes one hook-config entry and one command
@@ -91,14 +115,26 @@ is left open, then writes `docs/BRIEF.md` with every remaining gap tagged
 That's the whole answer to "what if I don't have a full brief yet" — you don't need one.
 A rough idea plus a few rounds of answering numbered questions produces one.
 
-## 4. It proceeds through the rest, stopping for approval at each phase
+## 4. It proceeds through the rest, stopping where the stop mode says
 
 CONTRACT (what must be true) → DESIGN (the shapes, no implementations) → SLICE (thin
 vertical slices, filed as board tasks and run under `focused-implementation`/
 `orchestrate-implementation`, not a SLICES.md checklist — see
 `keel-factory/keel/framework/TASK-BOARD-CROSSREF.md`) → PROVE (three-axis review + the
-gate actually run). At each stop it asks exactly: *"Approve `<PHASE>`, or what should
-change?"* Nothing proceeds on a partial yes.
+gate actually run).
+
+How often it stops is the **stop mode** (`keel-factory/keel/framework/TIERS.md`):
+
+- **checkpoint** (the default below PLATFORM): one question round covering the brief and
+  production readiness, one approval — *"Approve BRIEF and CONTRACT, or what should
+  change?"* — then it builds through to the PROVE report, halting only for the safety
+  rules, a decision it can't settle, a check it can't fix, or the cost ceiling;
+- **supervised** (the default at PLATFORM): every stop the tier lists, each asked as
+  *"Approve `<PHASE>`, or what should change?"*;
+- **unattended**: the same up-front approval, then `LOOPS.md`'s seven fields and a
+  headless run.
+
+Nothing proceeds on a partial yes.
 
 ## 4b. Working with less supervision between check-ins
 
