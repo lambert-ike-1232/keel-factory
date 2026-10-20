@@ -352,4 +352,3 @@ the master's `.scratch/task_board/crew-plan-prove-fixes.md`.
   worker's list, decided.
 - **Not observed:** no lane was evicted; both phases' fences and gates passed first time.
   Two runs are still not the bar in §12 for promotion.
-

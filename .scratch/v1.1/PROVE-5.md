@@ -152,4 +152,3 @@ Recorded verbatim in the crew plan's Open question 23: "Approve, list as gaps
 approved at `e09480c@v1.1-harness-conformance tree:c3ae134be1fa`. Because an approval holds only for the tree it reviewed, the SPRINT
 change and the 14 small items land later, with their own check, in
 `v1-1-closure5-open-items`, and 1.1.0's known-gap lines are written at the commit split.
-

@@ -333,4 +333,3 @@ Follow-ons filed:
 The board also carries D6 (`keel-hook-hardening` item 5 restated as its verifiers
 designed it, with dated corrections in `PROVE-3.md` and Open question 20) and item 9's
 relabel to Evidence. The 20 docs-only items are docs round 5's (Open question 22).
-

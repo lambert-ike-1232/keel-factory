@@ -68,7 +68,7 @@ None found. What I checked:
 2. **Duplicated knowledge vs "Reconcile, don't stack" (RECON §2).** There are two "is KEEL on" rules:
    - `keel_hook.keel_state` walks up to the git root and accepts `.keel` or `keel-factory`.
    - `install_guard.py` COMMAND (`ls -1 "$CLAUDE_PROJECT_DIR" | grep -qxF keel-factory`) checks only the start folder and ignores `.keel`.
-   
+
    `DATA-BOUNDARY.md:65-68,185` documents this as by design. Still, changing the switch now means editing it in Python and in shell.
 3. **Repeated Switches.** `keel_hook.py` checks `harness == "codex"` / `!= "codex"` in `instruction_files` (263), `carries_layer` (278) and `upgrade_note` (294, 297).
 4. **Speculative Generality.** `def guard(raw: str, harness: str = "claude")` (`keel_hook.py:394`) never reads `harness`. Its own docstring says guard behaves the same for both harnesses.
@@ -87,7 +87,7 @@ None found. What I checked:
 9. **Scratch code is tracked**, so it ships in the release archive:
    - `.scratch/v1.1/round3/ref3arm_driver.py:15` hard-codes `MASTER = Path("/Users/lambertike/Documents/KEEL-FACTORY")`.
    - `.scratch/v1.1/tools/mutate.py` has no self-test and puts several imports on one line.
-   
+
    The house script rule may not be meant for scratch files. The owner should decide.
 
 I did not open the `.scratch/v1.1/trials/*.jsonl` transcripts or anything gitignored. No review step needed them.

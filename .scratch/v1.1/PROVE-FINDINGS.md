@@ -101,31 +101,31 @@ amendments, which need the manager. Each line names the findings it closes.
 
 - **P10** — verdict **confirmed**, severity **major**.
   - Evidence: Code: harness/hooks/keel_hook.py:104 `if (folder / "keel-factory").is_dir():` and :106 `if (folder / ".git").exists() or folder.parent == folder: return None`. Outside any repo the walk only stops at "/".
-    
+
     Scratch repro (mktemp -d, Parent/KEEL-FACTORY/ and Parent/child/, child not in git): `[ -d $T/Parent/keel-factory ]` returned true and pathlib `is_dir()` printed True. `env -u CLAUDE_PROJECT_DIR python3 -B harness/hooks/keel_hook.py session <<<'{"cwd":"$T/Parent/child"}'` printed "KEEL is switched on in this project (/private/var/folders/.../Parent); role: kit." followed by the whole layer (additionalContext length 5474). The guard was armed too: a Read of child/.env gave "BLOCKED by data-boundary-guard ... /^\.env(\..+)?$/i" with exit 2. A control folder with no such sibling exited 0.
-    
+
     On the real machine, called keel_state() directly with paths that don't exist, so the only filesystem calls were stats: `/Users/lambertike/Documents/__probe_nonexistent__/deep/child -> KeelState(root=/Users/lambertike/Documents, role='kit')` and `/Users/lambertike/Documents -> KeelState(... role='kit')`. Desktop, Downloads and /private/tmp gave None. `git -C ~/Documents rev-parse` printed "fatal: not a git repository", and `[ -d ~/Documents/keel-factory ]` is true because APFS is case-insensitive here.
-    
+
     Ancestor sub-question: also confirmed. With A/.keel/keel.json set to {"role":"owner"} and A/b/c outside git, the session hook printed "KEEL is switched on in this project (.../A); role: owner". A git-bounded control (A/repo/sub, with `git init` in repo) printed nothing.
-    
+
     This breaks CONTRACT.md:53 ("On when the project root, or a folder above it inside the same repo, has .keel/ or keel-factory/"). It also breaks the hook's own docstring at keel_hook.py:7-9. It hits the documented default master locations: MANUAL.md:102 "`KEEL` is `~/Documents/KEEL-FACTORY`" and MANUAL.md:87 "~/GitProjects/KEEL-FACTORY". The case-mismatch is not the only trigger: a master cloned under the lowercase name keel-factory would switch on its parent on any filesystem. No test covers this: test_keel_hook.py:100 only checks a marker above a .git folder.
-    
+
     I rate it major, not critical. Arming the guard by mistake only adds blocks, so nothing is exposed. The real harm is unasked-for KEEL steering, about 5.4K characters of injected text, and guard friction in unrelated sessions under the master's parent folder. The contract break is real and should block the release.
   - Proposed fix: In keel_state: (1) find the first folder holding .git first; if there is none, check only `start` itself, as D2 says ('inside the same repo'). (2) Match marker names exactly, e.g. `name in os.listdir(folder)` for '.keel' and 'keel-factory', not `(folder/name).is_dir()`. APFS realpath does not fix letter case, so is_dir() matches any case. (3) Skip a 'keel-factory' entry whose resolve() is the same folder as kit_root(): the master is not a linked kit, and this also covers a master cloned as lowercase keel-factory. Add tests: non-git start below a folder holding keel-factory/ stays dormant; a differently-cased sibling stays dormant.
 - **P5** — verdict **confirmed**, severity **minor**.
   - Evidence: `git show e09480c:CLAUDE.md` has 200 lines and 12856 bytes. `grep -c "KEEL always-on layer"` gives 0 and `grep -n "keel-factory/CLAUDE.md"` gives rc=1, so neither string that keel_hook.py:122 accepts is in it. It starts "> **Dropped into someone else's package?**" (line 3) and "This project was started from KEEL FACTORY." (line 12).
-    
+
     v1.0 QUICKSTART.md:25 put that text into projects verbatim: `[ -e CLAUDE.md ] || cp keel-factory/CLAUDE.md CLAUDE.md`.
-    
+
     Scratch repro: a git-init'd project with keel-factory/ plus the v1.0 CLAUDE.md, run with CLAUDE_PROJECT_DIR set, gave additionalContext length 5475. It contains the v1.1 layer body ('<!-- KEEL always-on layer -->' present) on top of the project's own v1.0 copy, which has its own '## Data boundary' section at line 138. That makes about 18K characters of two different KEEL versions in context. Control: a project CLAUDE.md holding '@keel-factory/CLAUDE.md' gave the header only (length 430), so v1.0 projects that used the import route are fine.
-    
+
     This breaks CONTRACT.md:69-70 "If the project's own CLAUDE.md already imports or copies it, it injects only the kit-root line. One source, never two copies in context." Only projects that copied the v1.0 file are affected; new links copy the v1.1 file, which carries the marker. The guard is unaffected and nothing breaks, so the cost is context bloat and drift between the two versions: minor.
   - Proposed fix: In project_carries_layer, also recognize the v1.0 copy's signature, e.g. 'This project was started from KEEL FACTORY.' in the text. For that case, return the header plus one line telling the user to replace the v1.0 copy with '@keel-factory/CLAUDE.md' or the v1.1 layer. Add the same upgrade step to RELEASES.md/MANUAL.md, and a test that uses `git show e09480c:CLAUDE.md` as the project file.
 - **H3** — verdict **confirmed**, severity **minor**.
   - Evidence: harness/install_guard.py:29-30 COMMAND = `g="$CLAUDE_PROJECT_DIR/keel-factory/harness/hooks/data-boundary-guard.py"; [ -f "$g" ] || exit 0; exec python3 "$g"`. `git diff e09480c --stat -- harness/install_guard.py` is empty, so this is the unchanged v1.0 hook.
-    
+
     I ran the command string with exec replaced by echo, so the guard itself was not run. In a temp folder H3/KEEL-FACTORY/harness/hooks/data-boundary-guard.py, CLAUDE_PROJECT_DIR=$T/H3 printed "ARMED:.../H3/keel-factory/harness/hooks/data-boundary-guard.py". CLAUDE_PROJECT_DIR=/Users/lambertike/Documents printed "ARMED:/Users/lambertike/Documents/keel-factory/harness/hooks/data-boundary-guard.py". So the [ -f ] test passes through the case-insensitive match onto the master's real guard, and the v1.0 hook arms when a session starts in ~/Documents itself. It has no walk: CLAUDE_PROJECT_DIR=~/Documents/sub does not arm it (the echo printed nothing).
-    
+
     This predates v1.1 (it was already in v1.0) and fails safe: it adds blocks, injects nothing, and only fires for the exact parent folder. Minor.
   - Proposed fix: In install_guard.py COMMAND, add a check that the directory name matches exactly, e.g. `ls -1 "$CLAUDE_PROJECT_DIR" 2>/dev/null | grep -qx keel-factory || exit 0` before the [ -f ] test. Alternatively, fold the v1.0 wiring into keel_hook.py once P10's exact-name match is in place. Low priority: the bug predates v1.1 and fails safe.
 - **Related, found while verifying:** Related, from reasoning, not reproduced: with P10 live in a non-git ~/Documents session, the role text and OPERATOR.md:94 point notes at `keel-factory/.ops/`. Relative to the reported root /Users/lambertike/Documents, that path resolves case-insensitively to /Users/lambertike/Documents/KEEL-FACTORY/.ops/, the master's own tree. `git check-ignore -v .ops/x` gave rc=1 (not ignored), so operator notes from an unrelated session would land in the master repo as untracked files. Also, in that mismatched case session_text() calls project_carries_layer(), which reads ~/Documents/CLAUDE.md, AGENTS.md and CLAUDE.local.md if they exist. Those files are outside any project. I did not run the session hook against the real ~/Documents, so I read none of them. All scratch files were made under mktemp -d and removed; nothing in the repo was changed.
@@ -294,4 +294,3 @@ amendments, which need the manager. Each line names the findings it closes.
 - **COMPLETENESS-15. Data-boundary rule 3 forbids reading the plugin kit, because under the plugin it sits outside the project** — severity **minor**.
   - Evidence: CLAUDE.md:69 bans reading 'Anything outside this project's working tree that the task did not explicitly name'. The only exception it states is the guard probe (CLAUDE.md:80-83). Under the plugin every framework read is outside the project: the L4a trace reads `/Users/lambertike/.claude/skills/keel/keel/framework/TIERS.md`, and L7 reads `/Users/lambertike/.claude/skills/keel/OPERATOR.md`. MANUAL §5 promises it reads 'nothing outside the package'. Only the session header (absent in first sessions) implies permission ('read it as that folder').
   - Proposed fix: Add an explicit exception to the data-boundary section: the KEEL kit root (named in the session note, or resolved from the skill's own folder) is readable.
-
