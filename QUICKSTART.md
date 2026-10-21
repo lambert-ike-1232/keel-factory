@@ -134,6 +134,9 @@ How often it stops is the **stop mode** (`keel-factory/keel/framework/TIERS.md`)
 - **unattended**: the same up-front approval, then `LOOPS.md`'s seven fields and a
   headless run.
 
+At SPRINT, checkpoint and supervised stop at the same two places: one message that asks
+one question and asks you to approve BRIEF and CONTRACT, then the PROVE report.
+
 Nothing proceeds on a partial yes.
 
 ## 4b. Working with less supervision between check-ins

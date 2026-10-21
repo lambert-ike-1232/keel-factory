@@ -400,6 +400,9 @@ what to improve.
 | supervised | every phase the tier stops at | PLATFORM |
 | unattended | the up-front approval, then nothing until the PROVE report; needs `LOOPS.md`'s fields | only when you ask |
 
+At SPRINT, checkpoint and supervised stop at the same two places: one message that asks
+one question and asks you to approve BRIEF and CONTRACT, then the PROVE report.
+
 Every mode still stops for the safety rules, a decision it can't settle from what you
 approved, a check it can't fix in three tries, or the cost ceiling.
 
@@ -591,7 +594,7 @@ the first stop is "Approve BRIEF and CONTRACT, or what should change?"
   at this machine.
 - **The rules feel like too much ceremony.** Operator mode cuts everything except the
   safety rules. In owner mode, the tier decides how many stops you get: SPRINT has
-  almost none.
+  two, one before the build and one at the PROVE report.
 
 ---
 

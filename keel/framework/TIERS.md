@@ -72,8 +72,8 @@ stated rather than hidden.
 
 | Phase | What runs |
 |---|---|
-| BRIEF | The rewrite with `[GUESS: ...]`, one question, the announcement in one line. No grilling. |
-| CONTRACT | Types on the boundaries. One Required Check. Cost ceiling if it calls a metered API. No schemas file, no full contract. |
+| BRIEF | The rewrite with `[GUESS: ...]`, one question (asked at CONTRACT's stop), the announcement in one line. No grilling. |
+| CONTRACT | **Stop.** BRIEF and CONTRACT are approved together. Types on the boundaries. One Required Check. Cost ceiling if it calls a metered API. No schemas file, no full contract. |
 | DESIGN | The least-confident list only. Three bullets. No signatures. |
 | SLICE | Tracer bullet, then finish. Tests at one seam. |
 | PROVE | **Stop.** Arm the one floor check (watch it fail once), run the gate, two-axis review (Standards + Spec), honest status report. |
@@ -81,7 +81,8 @@ stated rather than hidden.
 **Artifacts:** `README.md`, `docs/BRIEF.md` (short form), `docs/ACCEPTANCE.md` (a
 handful of lines), `docs/DECISIONS.md`.
 
-**Blocking stops:** one, at PROVE.
+**Blocking stops:** two, in checkpoint mode too: BRIEF and CONTRACT together, in one
+message that also asks BRIEF's one question, then PROVE.
 
 **What you are explicitly giving up:** traceability, ops, audit, eval harness,
 schemas. Say so in the status report. A declared limitation reads as judgement; an
@@ -157,7 +158,7 @@ boundary.
 | Cost measured + in CI | no | measured | + CI |
 | ADRs / `CONTEXT.md` | no | `CONTEXT.md` | both |
 | Ops docs, eval harness, audit, demo | no | no | yes |
-| Blocking stops (supervised mode) | 1 | 3 | 4-5 |
+| Blocking stops (supervised mode) | 2 | 3 | 4-5 |
 
 ---
 
@@ -183,6 +184,7 @@ where secrets live, where it runs and how anyone will know it is healthy (logs,
 monitoring), which outside services it calls, the toolchain the checks need, and the
 cost ceiling. Each question carries options and a recommended pick (`DOCTRINE.md` §2).
 A question that depends on another's answer waits for a second round, still before the
+approval. At SPRINT the round is BRIEF's one question, asked in the same message as that
 approval.
 
 **In Codex** the round depends on the mode (`CAPABILITIES.md`, Codex table; Inferred: no

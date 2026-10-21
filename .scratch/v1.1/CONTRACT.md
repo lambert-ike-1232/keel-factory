@@ -154,6 +154,12 @@ answered.*
 ### D6 — Stop modes
 
 *Amended 2026-10-18: see Amendments, A3.*
+*2026-10-20, docs round 6 (sprint-checkpoint-stops): approved by the manager at the
+closure report, answer "Up-front round (Recommended)" (the crew plan's Open question 23).
+At SPRINT the up-front round is BRIEF's one question, asked in the same message as the
+approval of BRIEF and CONTRACT, and supervised mode stops at the same two places (that
+message, then the PROVE report). `TIERS.md`, the `keel` skill and `PHASES.md` say so
+from 1.1.1.*
 
 Added to `TIERS.md` as a second dial beside the tier. The tier sets how heavy each phase
 is; the mode sets which stops wait for you. The phases never change.

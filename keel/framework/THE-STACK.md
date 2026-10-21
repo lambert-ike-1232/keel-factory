@@ -269,8 +269,8 @@ Each one dissolves the same way: identify which clock each side is on.
 **1. Approval gates (Dex) vs. flow (Thorsten).**
 Gates are per-feature; "stop the ceremony" is per-message. Different clocks, no
 contradiction. Resolution: **the number of blocking stops is a function of the tier,
-not of the framework.** SPRINT stops once. STANDARD stops at CONTRACT and DESIGN.
-PLATFORM stops at every phase.
+not of the framework.** SPRINT stops once before the build, at BRIEF and CONTRACT
+together. STANDARD stops at CONTRACT and DESIGN. PLATFORM stops at every phase.
 
 **2. Front-load everything vs. learn from slice 1.**
 You cannot both decide everything up front and learn from running code. Resolution:
