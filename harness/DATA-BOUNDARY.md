@@ -332,15 +332,19 @@ because a yes to the task is not a yes to this.
   tooling covers them.
 - **An allowlist that came with the repository.** The guard honors a
   `.keel/data-boundary-allow` at the nearest git root of each path, so a submodule or a
-  nested clone can bring its own; HELM's switch-on check lists every `.keel/` folder
-  below the root as well. Committed or not, the file is honored, so a clone of a repo
-  that commits one starts with those paths open. HELM's switch-on and
-  `../OPERATOR.md`'s infil show the root's to the user, saying when git tracks it, and
-  list the rest with `find . -path ./keel-factory -prune -o -name .keel -print` (it
+  nested clone can bring its own; HELM's switch-on check lists the `.keel/` folders below
+  the root (not through linked folders) as well. Committed or not, the file is honored,
+  so a clone of a repo that commits one starts with those paths open. HELM's switch-on
+  and `../OPERATOR.md`'s infil show the root's to the user, saying when git tracks it,
+  and list the rest with `find . -path ./keel-factory -prune -o -name .keel -print` (it
   never names the file, so KEEL's hook allows it, unless `.keel/` or `keel-factory` is
   gitignored; then HELM's step 3(d) applies). Each `.keel/` found below the root is
-  handled like the root's. In operator mode they stop to ask. The guard itself does not
-  check where the file came from; making it ignore a committed one is a follow-on.
+  handled like the root's. In operator mode they stop to ask. The listing does not
+  follow a linked folder: a nested repository reached through a link to a folder outside
+  the project is not listed, though the guard honors its allowlist, since it finds that
+  repository's `.git` through the link. `find -L` is no fix, because it walks every
+  linked folder, wherever the link points. The guard itself does not check where the
+  file came from; making it ignore a committed one is a follow-on.
 - **MCP tools.** Neither matcher names them: the plugin's is
   `Read|Edit|MultiEdit|Write|NotebookEdit|Glob|Grep|Bash` and Codex's is
   `Bash|apply_patch`. So an MCP tool that takes a local path is not checked (Inferred from

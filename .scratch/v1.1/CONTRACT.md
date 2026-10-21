@@ -135,6 +135,11 @@ report".*
 owner-mode paragraph and keel step 3: the stop mode is asked in BRIEF's first round and
 recorded in docs/STATE.md, D2's one home. HELM writes no docs/ file, because its routing
 branch 1 reads docs/STATE.md as a project already under way.*
+*2026-10-20, docs round 6 (RECORDS-N3): S4-a2's reading stays inside D5's meaning
+under S-c2: the stop mode is still asked once and recorded for owner mode, in D2's one
+home; only the step that writes it moves from HELM to the keel skill HELM routes to.
+PROVE-4's "Every verified item" table named it an entry, in the report the manager
+answered.*
 
 - HELM's description names its triggers plainly ("use KEEL", "/keel:helm", any session in
   a project where KEEL is on). `keel` loses `disable-model-invocation`, so HELM can route
@@ -667,6 +672,8 @@ line under D4.*
 
 *2026-10-19, fix round 4: one more, for the same report, so five in all. It rewords
 approved text through a change fix round 4 made, under the same rule.*
+*2026-10-20, docs round 6 (RECORDS-N4): "five" counts the wordings that stood under
+"Proposed, awaiting the manager"; with F3-3, six were approved.*
 
 **F4-8's reading of D2 and P-H (K25).** What: D2's "Operator notes go in `.keel/ops/`
 when the kit came by plugin, `keel-factory/.ops/` when it was linked" and P-H's "(`<ops>`

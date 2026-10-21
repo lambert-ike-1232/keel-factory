@@ -100,19 +100,21 @@ looks:
    - (a) Once KEEL is switched on (step 1's `.keel/keel.json` written, or a
      `keel-factory/` in place; probe again if you probed before that), a Read of
      `keel-armed-check/.env` (a path that does not exist) must come back blocked. If it
-     is attempted instead ("File does not exist" means it was), say once that no guard is
-     armed here, run the data-boundary rule as strict policy (the Data boundary section
-     of `../../../CLAUDE.md`), and you may offer once to wire the fallback guard. In Claude
+     is attempted instead ("File does not exist", or a shell's
+     "No such file or directory", means it was), say once that no guard is armed here,
+     run the data-boundary rule as strict policy (the Data boundary section of
+     `../../../CLAUDE.md`), and you may offer once to wire the fallback guard. In Claude
      Code that is the plugin's hook (`../../../harness/install_plugin.py`; the older
      `../../../harness/install_guard.py` covers only `keel-factory/` projects); in Codex,
      the same installer with `--codex-hooks`. KEEL's installers (`install_plugin.py`,
      with or without `--codex-hooks`, and `install_guard.py`) write machine-wide entries
      that run the kit they were run from. Run them from the master (or through a linked
-     `keel-factory/`), never from a copy inside a project. New wiring arms from the next
-     session (in Claude Code, a settings-file hook also once `/hooks` is opened, the
-     plugin only from the next session; in Codex, once the hooks are trusted in
-     `/hooks`); until a probe there comes back blocked, strict policy stands. Never hold
-     the job on the answer.
+     `keel-factory/`), never from a copy inside a project. With only a copy here, ask the
+     user for the master's path; if there is no master, leave the wiring out and keep
+     strict policy. New wiring arms from the next session (in Claude Code, a settings-file
+     hook also once `/hooks` is opened, the plugin only from the next session; in Codex,
+     once the hooks are trusted in `/hooks`); until a probe there comes back blocked,
+     strict policy stands. Never hold the job on the answer.
    - (b) Read `.keel/data-boundary-allow` with the Read tool, and run
      `git ls-files -- .keel` (KEEL's hook blocks any command that names that file). If
      the file exists, show its entries to the user; where the only way to read is a
@@ -123,21 +125,25 @@ looks:
    - (c) A submodule or a nested clone can bring its own, so also run
      `find . -path ./keel-factory -prune -o -name .keel -print` (it never names the file,
      so KEEL's hook allows it, unless `.keel/` or `keel-factory` is gitignored; then (d)
-     applies). Each `.keel/` found below the root is handled like the root's: read its
-     allowlist with the Read tool, and run
-     `git -C <the folder that holds it> ls-files -- .keel` to see whether its own
-     repository tracks it.
+     applies). Each `.keel/` found below the root is handled like the root's: for one
+     that is a link, say where it points, and if that is outside the project, ask the
+     data-boundary question before reading through it; read its allowlist with the Read
+     tool, and run `git -C <the folder that holds it> ls-files -- .keel` to see whether
+     its own repository tracks it.
    - (d) If one of these checks (the listing in (c) included) is blocked with the reason
      'matches this repo's .gitignore', that block is the answer: the path it names is
      ignored (`.keel/`, `keel-factory/`, or the folder that holds a nested `.keel/`). Do
      not retry another way: say which check could not be run and ask the user to look in
-     that folder; in operator mode, stop before going on.
+     that folder (when the blocked check is the listing in (c), ask the user to look for
+     `.keel` entries in submodules and nested clones instead); in operator mode, stop
+     before going on.
 4. **Codex, owner mode.** If `AGENTS.md` holds KEEL's v1.0 text (it says
    `This project was started from KEEL FACTORY.`), add no block: offer MANUAL §11's
    choice, replacing that text with the block (recommended, so the layer loads once) or,
-   only where step 3's probe came back blocked (KEEL's Codex hooks wired and trusted),
-   deleting it and relying on the hook. Where the probe was not blocked, offer only the
-   replacement. Change the file only on the owner's yes.
+   only where step 3's probe came back blocked (the guard wired and trusted; ask the
+   owner to confirm `/hooks` also trusts KEEL's session hook), deleting it and relying on
+   the hook. Where the probe was not blocked, offer only the replacement. Change the file
+   only on the owner's yes.
    Otherwise (no v1.0 text), if the project's `AGENTS.md` has no line
    `<!-- KEEL always-on layer -->`, add the kit's `CLAUDE.md` to it once, creating the
    file if needed, so later Codex sessions get the layer without hooks. The block is the

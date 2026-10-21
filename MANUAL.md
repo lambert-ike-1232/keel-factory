@@ -651,8 +651,8 @@ from `main`, after merging:
    - In Codex, an `AGENTS.md` holding v1.0's copy gets the replacement, never the
      import: the kit's `CLAUDE.md` as one block that opens with its mark line. HELM
      offers deleting v1.0's copy and relying on the hook instead only where its guard
-     probe came back blocked (KEEL's Codex hooks wired and trusted); otherwise it offers
-     only the replacement.
+     probe came back blocked (the guard wired and trusted; HELM asks you to confirm that
+     `/hooks` also trusts KEEL's session hook); otherwise it offers only the replacement.
 
    A project holding a copied v1.0 `keel-factory/` re-copies it with section 4's rsync,
    or replaces it with a link (`link_kit.py`); until then its import carries v1.0's

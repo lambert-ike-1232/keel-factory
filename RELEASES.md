@@ -107,7 +107,7 @@ the rest).
 | Kit check | `harness/test_check_kit.py`, 34 tests, one break per rule. 36 broken copies of the checker each failed it. `check_kit.py` on the master: clean. |
 | Release script | `harness/test_make_release.py`, 14 tests, in temporary git repositories only. 25 broken copies each failed it. |
 | v1.0 self-tests | Still green: guard 27, link 9, lane checker 21. |
-| Plugin manifest | `claude plugin validate` passes; its one warning (a root `CLAUDE.md` is not loaded by a plugin) is expected. `claude plugin details keel@skills-dir`: 18 skills, 3 agents, 2 hooks. Its always-on estimate depends on the config: ~1,953 tokens in a fresh config holding only the plugin, ~2,530 in the build machine's own (probe P14). It counts the hooks as costing no context, but in a KEEL project the SessionStart injection comes on top: 6,029 characters by `check_kit.py`, and 5,918 characters of context seen live in L8 (6,132 bytes of hook output, JSON-escaped), run 2026-10-18, before fix rounds 3 and 4, and docs round 5, changed `CLAUDE.md`. |
+| Plugin manifest | `claude plugin validate` passes; its one warning (a root `CLAUDE.md` is not loaded by a plugin) is expected. `claude plugin details keel@skills-dir`: 18 skills, 3 agents, 2 hooks. Its always-on estimate depends on the config: ~1,953 tokens in a fresh config holding only the plugin, ~2,530 in the build machine's own (probe P14). It counts the hooks as costing no context, but in a KEEL project the SessionStart injection comes on top: 6,029 characters by `check_kit.py` on the master (the count includes the kit's and the temporary project's paths, so it varies by machine), and 5,918 characters of context seen live in L8 (6,132 bytes of hook output, JSON-escaped), run 2026-10-18, before fix rounds 3 and 4, and docs round 5, changed `CLAUDE.md`. |
 | Live, Claude Code 2.1.170 | L1–L8 in `HARNESS-PROBES.md`. The plugin loads from the link; the session layer arrives only where `.keel/` exists; the guard blocks `.env` there and not elsewhere; "Use KEEL:" alone fires HELM, records the role and probes the guard; checkpoint mode stops once up front and once at PROVE, building test-first between; `keel-prove` spawns the three reviewer agents, which found two defects the builder's own review had missed; in someone else's package (L7) it records the operator role, probes the guard, keeps the package's rules and leaves a labeled debrief in `.keel/ops/`. After the PROVE fixes (L8), a `general-purpose` and an `Explore` subagent each had their Read of `.env` blocked by the plugin's hook, so the guard covers subagents, `Explore` included, which does not load `CLAUDE.md`. |
 | Codex 0.138 | Probes X1–X10, all without a model call: repo and user skills listed, links followed, KEEL's 17 implicit skills listed as `keel:<name>`, `AGENTS.md` injected, hooks present and trust-gated; `codex plugin` has `add`, `list`, `marketplace` and `remove`, and no eval command (X10). |
 | Release tree, Claude Code 2.1.304 | Re-run on 2026-10-20 on v1.1's own tree, built apart from the michaelshimeles/skills work that shares the master and loaded with `claude --plugin-dir` (`HARNESS-PROBES.md`, "Release-tree re-runs"). The 261 self-tests above pass. Each mutation list passed its unbroken script first, then failed every broken copy: 93, 27, 18, 36 and 25. `check_kit.py`: clean. `claude plugin details`: 18 skills, 3 agents, 2 hooks, ~1,953 tokens always-on in a fresh config (P14). L8: the session asked the data-boundary question first; on a yes, both subagents' Reads of `.env` were blocked, the fake value reached neither trace, and the session hook injected 6,161 characters of context. Codex 0.138 lists the same 17 `keel:` skills (X9). |
@@ -115,7 +115,9 @@ the rest).
 ### Written, not yet proven in use — Inferred
 
 - The SessionStart injection's token cost: about 1,510 tokens, from `check_kit.py`'s
-  6,029 characters at four characters a token; no run has counted it in tokens.
+  6,029 characters on the master (the count includes the kit's and the temporary
+  project's paths, so it varies by machine) at four characters a token; no run has
+  counted it in tokens.
 - Codex's session hook injecting the layer: the template and installer are written to
   the Codex docs (0.163); no Codex session has run it (needs `/hooks` trust and a Codex
   model call).
@@ -175,8 +177,8 @@ the rest).
   hook timeout still fail open. Two routes reach the timeout: a command with tens of
   thousands of path-shaped words (`harness/DATA-BOUNDARY.md`, K36), and an allowlist
   linked to a device or a pipe, which stalls every guarded call in its repository; an
-  instruction file linked that way stalls the session hook instead. Both wait on
-  `keel-hook-hardening` item 9.
+  instruction file linked that way stalls the session hook instead. The two link stalls
+  wait on `keel-hook-hardening` item 9, the long command on item 8.
 - The three ECC Node hooks still have never run (no Node).
 - PROVE approved this release on 2026-10-20 with four of its nine must-haves met and
   five named PARTIAL: M2, one front door (a dry run on 2.1.304 ran HELM end to end; the

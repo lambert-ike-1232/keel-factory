@@ -47,10 +47,12 @@ session on a machine where the plugin is installed, KEEL project or not: about
 reports ~1,953 in a fresh config and ~2,530 in a configured one
 ([`HARNESS-PROBES.md`](keel/framework/HARNESS-PROBES.md), P14; Evidence). In a project
 where KEEL is switched on, the session hook adds the always-on layer and a short header:
-6,029 characters as `harness/check_kit.py` measures it, about 1,510 tokens at four
-characters a token (Inferred). A live run injected 5,918 characters of context (6,132
-bytes of hook output, JSON-escaped; the same file, L8). The listing estimate does not
-count it ([`CAPABILITIES.md`](keel/framework/CAPABILITIES.md), "Context cost estimate").
+6,029 characters as `harness/check_kit.py` measures it on the build machine (the count
+includes the kit's and the temporary project's paths, so it varies by machine), about
+1,510 tokens at four characters a token (Inferred). A live run injected 5,918 characters
+of context (6,132 bytes of hook output, JSON-escaped; the same file, L8). The listing
+estimate does not count it ([`CAPABILITIES.md`](keel/framework/CAPABILITIES.md),
+"Context cost estimate").
 
 ## Why two folders, not one merged framework
 
