@@ -27,7 +27,7 @@ Four kinds of thing, plus one thin layer that routes between them. The full mode
 
 | Folder | What it is | The kind of thing it is |
 | --- | --- | --- |
-| [`RELEASES.md`](RELEASES.md) · `VERSION` | Which release this is (v1.1.0), and what each release changed and how it was proven. | the version record |
+| [`RELEASES.md`](RELEASES.md) · `VERSION` | Which release this is (v1.1.1), and what each release changed and how it was proven. | the version record |
 | [`MANUAL.md`](MANUAL.md) | **Lost track? Start here.** Everything from a blank machine to a finished job, in order, with the exact commands and prompts. | the instruction manual |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | **The map.** How method, execution, perception, and enforcement relate; how HELM routes between them; what was lacking and how it was addressed. | the whole-system view |
 | [`keel/`](keel/) | **KEEL** — five phases (BRIEF → CONTRACT → DESIGN → SLICE → PROVE), RECON before them on existing systems, three tiers, six rules, templates, and the `keel`/`keel-prove` skills. Plus `skills/helm/` (the front door), `skills/crew/` with `framework/CREW.md` (several agents on one project without collisions), and `capabilities/` (the two senses: reverse-engineering and deep-research). | **Method** — what must be true, in what order |

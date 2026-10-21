@@ -4,7 +4,7 @@ Read this when you've lost track. It covers everything from a blank machine to a
 finished job, in order. Every other document in this folder goes deeper into one piece;
 this one tells you which piece you need and what to type.
 
-Version 1.1.0 (see `VERSION`). Last revised 2026-10-19.
+Version 1.1.1 (see `VERSION`). Last revised 2026-10-20.
 
 ---
 
@@ -601,7 +601,7 @@ the first stop is "Approve BRIEF and CONTRACT, or what should change?"
 ## 11. Releases and versions
 
 The master is a git repository, and what travels between machines is a **release**.
-This is v1.1.0. Its version is in `VERSION`, and what each release contains is in
+This is v1.1.1. Its version is in `VERSION`, and what each release contains is in
 `RELEASES.md`.
 
 **What a release folder holds** (`KEEL-FACTORY-releases/v<version>/`, next to the

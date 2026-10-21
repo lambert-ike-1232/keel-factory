@@ -10,6 +10,92 @@ Evidence (a check was run and passed), Inferred (reasoned, not run), or Missing 
 
 ---
 
+## v1.1.1 — 2026-10-20
+
+A patch on 1.1.0: the fourteen small text items and the SPRINT stop change that 1.1.0
+listed under "Known gaps". No script, hook, test or eval changed; the version moved in
+`VERSION` and `.claude-plugin/plugin.json`. The plan and its record are the board task
+`v1-1-closure5-open-items` and `.scratch/v1.1/followon/` in the master.
+
+### What it contains
+
+- **SPRINT stops before the build, in every stop mode.** A SPRINT session writes the
+  short BRIEF and the light CONTRACT on its own pick for BRIEF's one question, then sends
+  one message: that question, with its options and the pick, and "Approve BRIEF and
+  CONTRACT, or what should change?". It waits there, and again at the PROVE report. So
+  supervised SPRINT has two blocking stops (it had one), and checkpoint no longer stops
+  more often than supervised. The manager chose this on 2026-10-20 (the board task
+  `sprint-checkpoint-stops`, answer (a)). The change is in `TIERS.md`, the `keel` skill,
+  `PHASES.md`, `MANUAL.md`, `QUICKSTART.md`, `THE-STACK.md` and `templates/CONTRACT.md`.
+- **HELM's switch-on**, with the matching lines of `OPERATOR.md`'s infil:
+  - Step 3(a): with only a copy of the kit in the project, HELM asks the user for the
+    master's path; with no master, it leaves the wiring out and keeps strict policy. The
+    installers still never run from a copy.
+  - The probe's gloss names a shell's "No such file or directory" beside "File does not
+    exist", for Codex, where the probe is a shell command.
+  - Step 3(c): for a nested `.keel` that is a link, HELM says where it points, and asks
+    the data-boundary question before reading through it when it points outside the
+    project.
+  - Step 3(d): when the blocked check is the nested listing, the user is asked to look
+    for `.keel` entries in submodules and nested clones, not in the folder the block
+    names.
+  - Step 4 (Codex, owner mode): a blocked probe shows that the guard is wired and
+    trusted, not the session hook, so HELM asks the owner to confirm that `/hooks` trusts
+    KEEL's session hook too before it offers to delete v1.0's `AGENTS.md` text.
+    `MANUAL.md` section 11 says the same.
+- **`OPERATOR.md`** also takes HELM's "probe again if you probed before that", and its
+  138-column infil line is rewrapped.
+- **`harness/DATA-BOUNDARY.md`** says the nested listing does not follow a linked folder,
+  though the guard honors the allowlist of a repository reached through one, and why
+  `find -L` is no fix.
+- **`CAPABILITIES.md`, the row "When new wiring arms",** sources the plugin's
+  next-session loading (KEEL's own instruction, `MANUAL.md` sections 3 and 10; not
+  observed) and names `/reload-plugins` beside `/hooks` as Missing evidence.
+- **1.1.0's notes, corrected in place below:** the two link stalls wait on
+  `keel-hook-hardening` item 9 and the long command on item 8; the 6,029-character
+  session figure is the master's, since the count includes the kit's and the temporary
+  project's paths. `README.md` says the same.
+- **v1.1's build record** (`.scratch/v1.1/CONTRACT.md`) gets two dated notes: why
+  S4-a2's reading of D5 is an entry and not a proposal, and what "five in all" counts.
+
+### Proven — Evidence
+
+| What | How |
+| --- | --- |
+| Self-tests | On 1.1.1's own tree (`v1.1.0` plus v1.1's version of each changed file, built apart from the retrofit that shares the master), the eight self-tests pass: R1 to R7 and R13 of v1.1's `.scratch/v1.1/ACCEPTANCE.md`, the same scripts and counts as 1.1.0's table below, 261 tests in all. No script changed, so 1.1.0's mutation records still arm them. |
+| Kit check and manifest | `harness/check_kit.py --root <tree>`: no findings, `CLAUDE.md` at 5,595 characters. `claude plugin validate <tree>/.claude-plugin/plugin.json`: exit 0, with the one expected warning. The task board validator on the master's board (R10, `validate_board.py --board .scratch/task_board`): no findings, 46 tasks. |
+| SPRINT's up-front stop, live | One headless Claude Code 2.1.304 session on the dry run's SPRINT request, loading 1.1.1's tree as first built (clone `b6b42d4`) with `--plugin-dir` (`keel@inline`, 1.1.1). The session read `CLAUDE.md`, the `helm` and `keel` skills, `TIERS.md` and four templates, and none of them changed after that build. It wrote only `docs/` and `.keel/keel.json`, then stopped with one message holding BRIEF's one question (three options and a pick) and "Approve BRIEF and CONTRACT, or what should change?". 12 turns, 55 seconds. The pass criteria were written before the run; the record is in the master's `.scratch/evidence/v1.1-followon/trial/`. |
+| The fourteen items | The closure check (`keel-prove`: the Standards, Spec and Gate reviewer agents in fresh contexts, then three skeptics per finding) re-tested each of the fourteen items and the SPRINT change, and its first cycle found each fixed. Its surviving findings were fixed or filed (the board task `v1-1-closure5-open-items`). |
+
+### Written, not yet proven in use — Inferred
+
+- The SPRINT stop in supervised and unattended mode, and in Codex: only checkpoint ran
+  live, once, in Claude Code. In Codex's Default mode KEEL asks one question per turn,
+  so the one message that pairs BRIEF's question with the approval may take two turns
+  there; no Codex trial has run it.
+- One run cannot show that every SPRINT run stops there. The eval's runs varied (1.1.0's
+  known gaps).
+- HELM asks the stop mode in BRIEF's first round when the user's message does not
+  settle it. At SPRINT that round is the one stop message, where checkpoint and
+  supervised stop at the same places, so the answer matters there only for unattended.
+  No file says whether to ask it there; in the one live run the agent stated the
+  default, checkpoint, and did not ask.
+- HELM's and `OPERATOR.md`'s new wording (steps 3(a), 3(c), 3(d) and 4) is text only; no
+  live run has read it.
+
+### Known gaps — Missing evidence
+
+- PROVE's must-have table was not re-run for 1.1.1. Of 1.1.0's PARTIAL must-haves, this
+  release works on M3 (the SPRINT stops) and M9 (the unsourced row in
+  `CAPABILITIES.md`); M2, M5 and M7 are unchanged from 1.1.0's list.
+- Whether `/reload-plugins`, or opening `/hooks`, loads a plugin mid-session.
+- A root `.keel` that is itself a link out of the project is still read through without
+  the data-boundary question; 3(c)'s new clause covers nested ones only. It predates
+  1.1.0 and is on the board (`v1-1-closure5-open-items`).
+- 1.1.0's other known gaps stand, the eval's `vague-idea` shortfall among them.
+
+---
+
 ## v1.1.0 — 2026-10-20
 
 KEEL conformed to what Claude Code and Codex really do, built with KEEL itself (RECON →
