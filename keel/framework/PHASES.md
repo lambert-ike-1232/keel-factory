@@ -19,7 +19,7 @@ under "Stop modes" in [TIERS.md](TIERS.md).
 
 **Question:** What are we building, for whom, and what am I guessing?
 **Produces:** `docs/BRIEF.md`
-**Stop:** SPRINT no · STANDARD no · PLATFORM yes
+**Stop:** SPRINT no (its question waits for CONTRACT's stop) · STANDARD no · PLATFORM yes
 
 ### What happens
 
@@ -34,7 +34,8 @@ under "Stop modes" in [TIERS.md](TIERS.md).
 
 3. **Resolve the guesses.** How, depends on tier:
    - **SPRINT** — one question, the most consequential, with its options and the
-     agent's pick. Proceed on the rest as written.
+     agent's pick. Proceed on the rest as written. Write BRIEF on that pick, and ask the
+     question at CONTRACT's stop, in one message with the approval of BRIEF and CONTRACT.
    - **STANDARD** — grilling rounds. Model the problem as a design tree; the
      **frontier** is every decision whose prerequisites are settled. Ask the whole
      frontier in one numbered round, **each question carrying two or three concrete
@@ -76,7 +77,7 @@ stop that conversation from happening.
 
 **Question:** What must be true for this to be done?
 **Produces:** `docs/CONTRACT.md`, `docs/ACCEPTANCE.md`, `schemas/`, `docs/TRACEABILITY.md`, `docs/COST_MODEL.md` (budget section)
-**Stop:** SPRINT no · STANDARD **yes** · PLATFORM **yes**
+**Stop:** SPRINT **yes**, with BRIEF · STANDARD **yes** · PLATFORM **yes**
 
 This is the phase that makes "production-ready" mean something. It is also the phase
 most people skip, and skipping it is why scaffolds look finished and run nothing.
@@ -139,11 +140,14 @@ Every Required Check is a command that will exist, every schema field is constra
 the traceability matrix has a row per feature line, the cost ceiling is a number **with a
 check bound to it**, and every check's toolchain is confirmed present.
 
-### Stop here at STANDARD and above
+### Stop here at every tier
 
 This is the highest-value approval point in KEEL. A wrong assumption is cheap to fix
 in the contract and expensive to fix in code, and everything downstream inherits from
 it.
+
+At SPRINT this stop covers BRIEF too: one message asks BRIEF's one question and asks
+for approval of BRIEF and CONTRACT together.
 
 ---
 
@@ -268,8 +272,8 @@ before the smart zone runs out rather than pushing on degraded.
 **Produces:** the review, the gate result, an honest status report
 **Stop:** SPRINT **yes** · STANDARD **yes** · PLATFORM **yes**
 
-Every tier stops here. This is the one non-negotiable approval in KEEL, because it is
-the phase where a claim becomes a fact or fails to.
+Every tier stops here, and no stop mode skips it, because this is the phase where a
+claim becomes a fact or fails to.
 
 ### What happens
 

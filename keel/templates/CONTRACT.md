@@ -1,6 +1,6 @@
 # Contract: [Project name]
 
-Phase 2 of KEEL. **Stop point at STANDARD and above.**
+Phase 2 of KEEL. **Stop point at every tier.**
 
 Every line here is a *decision*, not a category of options. "A database" is not a
 decision; "PostgreSQL 16 on Fly.io, single region" is.

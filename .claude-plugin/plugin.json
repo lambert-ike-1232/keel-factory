@@ -1,6 +1,6 @@
 {
   "name": "keel",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "KEEL FACTORY: an engineering method for AI coding agents. HELM routes every session; five phases take an idea or a codebase to production grade; an independent PROVE review decides what is done; a data-boundary guard arms only in projects where KEEL is switched on.",
   "author": {
     "name": "Lambert Ike"

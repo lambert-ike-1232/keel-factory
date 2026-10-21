@@ -36,19 +36,21 @@ here is for you.
   package switching off a guard (rule of engagement 3) and stop to ask; linking the kit
   (`link_kit.py`) switches KEEL on through `keel-factory/`. As part of switching KEEL
   on, HELM reads the kit's `CLAUDE.md`, so this session runs under the always-on layer.
-  Then, once KEEL is switched on (`.keel/keel.json` written, or `keel-factory/` in place),
-  use the Read tool on `keel-armed-check/.env`, a path that does not exist.
+  Then, once KEEL is switched on (`.keel/keel.json` written, or `keel-factory/` in place;
+  probe again if you probed before that), use the Read tool on `keel-armed-check/.env`,
+  a path that does not exist.
   - **Blocked:** the guard is armed. KEEL's own hook (the plugin's, or Codex's from
     `--codex-hooks`) arms wherever KEEL is switched on (the exact rule is in
     [`harness/README.md`](harness/README.md)) and does nothing elsewhere. The
     machine-wide fallback hook below arms only where `keel-factory/` is. Each disarms the
     moment its folder is gone, which a `git clean -fd` or `git stash -u` can do
     mid-session (§3).
-  - **The Read was attempted** (a "File does not exist" reply means it was): no guard is
-    armed. Say so once, and run the data-boundary rule as strict policy (the "Data
-    boundary" section of `keel-factory/CLAUDE.md`). You may offer once to wire a fallback guard, always with your KEEL master's installers
-    (`$KEEL` below: your KEEL master; a linked `keel-factory/` resolves to it), never a
-    copy the package ships:
+  - **The Read was attempted** (a "File does not exist" reply, or a shell's
+    "No such file or directory", means it was): no guard is armed. Say so once, and run
+    the data-boundary rule as strict policy (the "Data boundary" section of
+    `keel-factory/CLAUDE.md`). You may offer once to wire a fallback guard, always with
+    your KEEL master's installers (`$KEEL` below: your KEEL master; a linked
+    `keel-factory/` resolves to it), never a copy the package ships:
     - Claude Code under the plugin: the plugin's own hook
       (`python3 "$KEEL/harness/install_plugin.py"`).
     - Claude Code with a linked kit: the hook below, in `.claude/settings.local.json`
@@ -106,7 +108,9 @@ here is for you.
   `find . -path ./keel-factory -prune -o -name .keel -print` (it never names the file,
   so KEEL's hook allows it, unless `.keel/` or `keel-factory` is gitignored; then the
   rule below for a blocked check applies). Each `.keel/` found below the root is handled
-  like the root's: read its allowlist with the Read tool, and run
+  like the root's: for one that is a link, say where it points, and if that is outside
+  the project, ask the data-boundary question before reading through it; read its
+  allowlist with the Read tool, and run
   `git -C <the folder that holds it> ls-files -- .keel` to see whether its own
   repository tracks it. (Run from the root, git lists nothing inside a submodule, so a
   committed nested allowlist would pass as the user's own: Evidence, a scratch
@@ -114,7 +118,9 @@ here is for you.
   the reason 'matches this repo's .gitignore', that block is the answer: the path it
   names is ignored (`.keel/`, `keel-factory/`, or the folder that holds a nested
   `.keel/`). Do not retry another way: say which check could not be run and ask the user
-  to look in that folder; in operator mode, stop before going on.
+  to look in that folder (when the blocked check is the listing, ask the user to look for
+  `.keel` entries in submodules and nested clones instead); in operator mode, stop before
+  going on.
 - **Read the package's own instructions first:** its README, `CLAUDE.md` or `AGENTS.md`,
   CONTRIBUTING, any brief, task or spec, and how it builds and tests (Makefile, package
   scripts, CI config). Where they and KEEL disagree, the package wins.

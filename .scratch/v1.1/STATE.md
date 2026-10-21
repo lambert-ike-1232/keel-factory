@@ -9,13 +9,24 @@
 | 2 — CONTRACT | **APPROVED** 2026-10-18 |
 | 3 — DESIGN | written 2026-10-18 (`DESIGN.md`); checkpoint mode, not a blocking stop |
 | 4 — SLICE | done 2026-10-18, no stop (checkpoint); 13 slices closed on `.scratch/task_board/` |
-| 5 — PROVE | **in progress**: pass 1 (52 findings) → fix run → pass 2 (`PROVE-2.md`, did not pass: 3 majors) → the manager picked fix round 3 → pass 3. Fix round 3: phase A (code, skills, layer) landed and gated 2026-10-18; phase B (docs, records) landed 2026-10-19 after reference3 and records3 were re-dispatched (a usage limit had cut off their first builds), each lane audited by a fresh reader and repaired (the crew plan's execution log). PROVE pass 3 run 2026-10-19 (`PROVE-3.md`): does not pass yet; 0 majors after verification, 5 fix-now items open (two fail-open paths in `keel_hook.py`); coverage 3 / 9. The manager picked fix round 4 → pass 4 (crew plan Open question 20, verbatim). Fix round 4 landed 2026-10-19 (phases A and B, each fenced and gated; the full re-run's mutation proofs 199/199). PROVE pass 4 ran 2026-10-19 (`PROVE-4.md`): no major and no fix-now item; 20 docs-only, 3 follow-ons, 4 rejects; coverage 3 / 9. The manager approved docs round 5 and all six contract wordings on 2026-10-20 (crew plan Open question 21, verbatim), after the retrofit's fifth cycle. Docs round 5 landed 2026-10-20 (run `wf_ffb58839-36f`, fenced and gated; the crew plan's "Docs round 5, back and landed"; the five mutation proofs 209/209 after identity baselines). The closure check of pass 4's items on the current tree (`PROVE-5.md`): 26 of 27 fixed, S4-a1 partly; the dry run's DR-2 fixed; 19 new small items, none major or fix-now (6 records closed at the report, 14 in `v1-1-closure5-open-items`); coverage 4 / 9. **APPROVED** 2026-10-20 at `e09480c@v1.1-harness-conformance tree:c3ae134be1fa`, snapshot `.scratch/evidence/v1.1/closure-5.json` (the manager's answer, crew plan Open question 23), with M2, M3, M5, M7 and M9 named PARTIAL and 14 small items as known gaps. Next, only on the manager's word: the release steps. |
+| 5 — PROVE | **in progress**: pass 1 (52 findings) → fix run → pass 2 (`PROVE-2.md`, did not pass: 3 majors) → the manager picked fix round 3 → pass 3. Fix round 3: phase A (code, skills, layer) landed and gated 2026-10-18; phase B (docs, records) landed 2026-10-19 after reference3 and records3 were re-dispatched (a usage limit had cut off their first builds), each lane audited by a fresh reader and repaired (the crew plan's execution log). PROVE pass 3 run 2026-10-19 (`PROVE-3.md`): does not pass yet; 0 majors after verification, 5 fix-now items open (two fail-open paths in `keel_hook.py`); coverage 3 / 9. The manager picked fix round 4 → pass 4 (crew plan Open question 20, verbatim). Fix round 4 landed 2026-10-19 (phases A and B, each fenced and gated; the full re-run's mutation proofs 199/199). PROVE pass 4 ran 2026-10-19 (`PROVE-4.md`): no major and no fix-now item; 20 docs-only, 3 follow-ons, 4 rejects; coverage 3 / 9. The manager approved docs round 5 and all six contract wordings on 2026-10-20 (crew plan Open question 21, verbatim), after the retrofit's fifth cycle. Docs round 5 landed 2026-10-20 (run `wf_ffb58839-36f`, fenced and gated; the crew plan's "Docs round 5, back and landed"; the five mutation proofs 209/209 after identity baselines). The closure check of pass 4's items on the current tree (`PROVE-5.md`): 26 of 27 fixed, S4-a1 partly; the dry run's DR-2 fixed; 19 new small items, none major or fix-now (6 records closed at the report, 14 in `v1-1-closure5-open-items`); coverage 4 / 9. **APPROVED** 2026-10-20 at `e09480c@v1.1-harness-conformance tree:c3ae134be1fa`, snapshot `.scratch/evidence/v1.1/closure-5.json` (the manager's answer, crew plan Open question 23), with M2, M3, M5, M7 and M9 named PARTIAL and 14 small items as known gaps. **Released as 1.1.0** 2026-10-20 on the manager's word ("Run all seven steps (Recommended)"): v1.1's own tree, apart from the retrofit, in twelve commits merged into `main` as `083411d`, annotated tag `v1.1.0`, release folder `../KEEL-FACTORY-releases/v1.1.0/` (`release/COMMIT-PLAN.md`, "Outcome"). |
 
 **Tier:** STANDARD
 **Stop mode:** checkpoint — the manager approved BRIEF and CONTRACT together by answering
 the one question round; the next blocking stop is the PROVE report.
-**Branch:** `v1.1-harness-conformance` (from `main` at `v1.0.0`). Nothing committed yet;
-committing waits for the manager's word. **Resume from `.scratch/handoff.md` (2026-10-19).**
+**Branch:** 1.1.0 is on `main` at `v1.1.0` (`083411d`). 1.1.1's commits are on
+`keel/v1-1-closure5-open-items-3d56`, in a worktree beside the master. The master's
+checkout is on `keel/skills-retrofit-82bf`, with the retrofit uncommitted on top.
+**Resume from `.scratch/handoff.md`.**
+**1.1.1, 2026-10-20:** docs round 6 fixed the closure check's fourteen items and the
+SPRINT stops (`.scratch/task_board/v1-1-closure5-open-items.md`), in the master under
+the mirror rule: v1.1's version is in the base copies and five live files, and the
+retrofit's live files carry the same changes. Its closure check ran four cycles (the
+manager raised the cap from 3 to 4 for SPEC-C3-1, "Fix, re-test once (Recommended)")
+and ended with every item fixed and no finding open; report
+`.scratch/evidence/v1.1-followon/CLOSURE-REPORT.md`. The manager answered "Run the
+landing (Recommended)" and "Commit v1.1's STATE (Recommended)": this file is 1.1.1's
+fourth commit, and the merge into `main`, the tag `v1.1.1` and the release follow it.
 
 ## Notes for a fresh session
 
@@ -36,8 +47,8 @@ load-bearing is copied into these files.
 
 ## Blocked / open
 
-- `claude plugin eval` needs Claude Code ≥ 2.1.269 (this machine: 2.1.170). Evals stay a
-  manual gate.
+- `claude plugin eval` ran 2026-10-20 on 2.1.304 against v1.1's tree; the results are in
+  RELEASES' known gaps (`vague-idea` below its baseline, cause Missing evidence).
 - A live Codex probe of the hooks needs a Codex model call (not yet approved).
 
 - **Contract amendments:** all answered by the manager 2026-10-18 (A1–A4 + three wording
@@ -52,5 +63,5 @@ load-bearing is copied into these files.
   ships first as 1.1.0, committed from the pre-retrofit copies in
   `.scratch/skills-main/base/`, which round 5 edits too (Open question 22's mirror rule).
 - **The v1.0 machine-wide guard hook:** removed 2026-10-18 on the manager's yes.
-- **At commit time (the manager's call):** whether `.scratch/v1.1/` (records, `round3/`,
-  `round4/`) is committed, and how much of it (PROVE pass 3, T9).
+- **Answered at commit time, 2026-10-20:** "Commit cited records": the twelve top-level
+  Markdown records here and the crew plan went into 1.1.0; the subfolders did not.

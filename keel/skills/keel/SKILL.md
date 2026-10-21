@@ -74,15 +74,15 @@ the orientation does HELM's job for the KEEL branches.
 
 Run the phase the user named, or the next unapproved one. Full detail in
 `../../framework/PHASES.md`. The "Stop at" column is the **supervised** mode. In
-**checkpoint** mode the only stops are the up-front round (BRIEF and CONTRACT approved
-together) and the PROVE report; **unattended** keeps the same up-front approval and then
-runs inside `../../framework/LOOPS.md`. Every mode still halts for the reasons listed under
-"Stop modes" in `../../framework/TIERS.md`.
+**checkpoint** mode, at every tier, SPRINT included, the only stops are the up-front
+round (BRIEF and CONTRACT approved together) and the PROVE report; **unattended** keeps
+the same up-front approval and then runs inside `../../framework/LOOPS.md`. Every mode
+still halts for the reasons listed under "Stop modes" in `../../framework/TIERS.md`.
 
 | Phase | Produces | Stop at (supervised) |
 |---|---|---|
 | **BRIEF** | `docs/BRIEF.md` — rewrite with `[GUESS: ...]`, resolved; announcement | PLATFORM |
-| **CONTRACT** | `CONTRACT.md`, `ACCEPTANCE.md`, `schemas/`, `TRACEABILITY.md` (all `FAIL`), cost budget, **verified toolchain table**, **bound-numbers table** | STANDARD, PLATFORM |
+| **CONTRACT** | `CONTRACT.md`, `ACCEPTANCE.md`, `schemas/`, `TRACEABILITY.md` (all `FAIL`), cost budget, **verified toolchain table**, **bound-numbers table** | every tier (at SPRINT, with BRIEF and its one question) |
 | **DESIGN** | `DESIGN.md` — signatures with no bodies, seams, depth check, cost ladder, test plan, least-confident list | STANDARD, PLATFORM |
 | **SLICE** | board tasks (`task-board-init`/`to-task`) + code, tracer bullet first | every slice boundary |
 | **PROVE** | **always through the `keel-prove` skill**, never inline: negative controls armed first, then the review by fresh-context reviewer agents (two axes at SPRINT, where the builder may run the gate's commands; three above), gate run, traceability promoted, cost measured against its assertion, honest status | every tier |
@@ -104,6 +104,11 @@ in the same round, write both
 documents, and ask **"Approve BRIEF and CONTRACT, or what should change?"** Between that
 stop and the PROVE report, a phase boundary is a progress note to the user, not a
 question: say what was decided and what is next, then go on.
+
+At SPRINT, in checkpoint and supervised mode alike, write BRIEF and CONTRACT on your pick
+for BRIEF's one question, then stop with one message: that question, with its options and
+your pick, and **"Approve BRIEF and CONTRACT, or what should change?"** DESIGN and SLICE
+wait for the answer.
 
 1. Write the document to disk.
 2. Summarise to the user: at most 5-10 bullet decisions, plus the path. Lead with the

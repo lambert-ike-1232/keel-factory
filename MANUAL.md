@@ -4,7 +4,7 @@ Read this when you've lost track. It covers everything from a blank machine to a
 finished job, in order. Every other document in this folder goes deeper into one piece;
 this one tells you which piece you need and what to type.
 
-Version 1.1.0 (see `VERSION`). Last revised 2026-10-19.
+Version 1.1.1 (see `VERSION`). Last revised 2026-10-20.
 
 ---
 
@@ -400,6 +400,9 @@ what to improve.
 | supervised | every phase the tier stops at | PLATFORM |
 | unattended | the up-front approval, then nothing until the PROVE report; needs `LOOPS.md`'s fields | only when you ask |
 
+At SPRINT, checkpoint and supervised stop at the same two places: one message that asks
+one question and asks you to approve BRIEF and CONTRACT, then the PROVE report.
+
 Every mode still stops for the safety rules, a decision it can't settle from what you
 approved, a check it can't fix in three tries, or the cost ceiling.
 
@@ -591,14 +594,14 @@ the first stop is "Approve BRIEF and CONTRACT, or what should change?"
   at this machine.
 - **The rules feel like too much ceremony.** Operator mode cuts everything except the
   safety rules. In owner mode, the tier decides how many stops you get: SPRINT has
-  almost none.
+  two, one before the build and one at the PROVE report.
 
 ---
 
 ## 11. Releases and versions
 
 The master is a git repository, and what travels between machines is a **release**.
-This is v1.1.0. Its version is in `VERSION`, and what each release contains is in
+This is v1.1.1. Its version is in `VERSION`, and what each release contains is in
 `RELEASES.md`.
 
 **What a release folder holds** (`KEEL-FACTORY-releases/v<version>/`, next to the
@@ -651,8 +654,8 @@ from `main`, after merging:
    - In Codex, an `AGENTS.md` holding v1.0's copy gets the replacement, never the
      import: the kit's `CLAUDE.md` as one block that opens with its mark line. HELM
      offers deleting v1.0's copy and relying on the hook instead only where its guard
-     probe came back blocked (KEEL's Codex hooks wired and trusted); otherwise it offers
-     only the replacement.
+     probe came back blocked (the guard wired and trusted; HELM asks you to confirm that
+     `/hooks` also trusts KEEL's session hook); otherwise it offers only the replacement.
 
    A project holding a copied v1.0 `keel-factory/` re-copies it with section 4's rsync,
    or replaces it with a link (`link_kit.py`); until then its import carries v1.0's
